@@ -74,7 +74,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">2.5k</span>
+            <span class="post-count">3.2k</span>
         </span>
     </span>
 
@@ -83,7 +83,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">10 min</span>
+            <span class="post-count">13 min</span>
         </span>
     </span>
 </div>
@@ -245,6 +245,31 @@
 </ol>
 <h4 id="1-4-6-练习"><a href="#1-4-6-练习" class="headerlink" title="1.4.6 练习"></a>1.4.6 练习</h4><ul>
 <li>判断一个字符串中出现次数最多的字符，并统计次数<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> s = <span class="string">'aaabbbcccaaabbbaaa'</span>;</span><br><span class="line"><span class="keyword">var</span> a = s.split(<span class="string">''</span>).sort().join(<span class="string">""</span>);  </span><br><span class="line"><span class="comment">// "aaaaaaaaabbbbbbccc"</span></span><br><span class="line"><span class="keyword">var</span> ans = a.match(<span class="regexp">/(\w)\1+/g</span>); </span><br><span class="line"><span class="comment">// ["aaaaaaaaa", "bbbbbb", "ccc"]</span></span><br><span class="line">ans.sort(<span class="function"><span class="keyword">function</span>(<span class="params">a,b</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a.length - b.length;</span><br><span class="line">&#125;) </span><br><span class="line"><span class="comment">// ["ccc", "bbbbbb", "aaaaaaaaa"]</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'ans is : '</span> + ans[ans.length<span class="number">-1</span>])</span><br></pre></td></tr></table></figure></li>
+<li>给数字加千分位分隔符  </li>
+</ul>
+<p>方法一</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">numFormat</span>(<span class="params">num</span>) </span>&#123;</span><br><span class="line">        <span class="comment">//将数字按 "."分割成2部分。处理"."之前的部分</span></span><br><span class="line">        <span class="keyword">let</span> splitStr = num.toString().split(<span class="string">"."</span>);</span><br><span class="line">        <span class="keyword">let</span> newStr = splitStr[<span class="number">0</span>].split(<span class="string">""</span>).reverse().join(<span class="string">""</span>)</span><br><span class="line">          .replace(<span class="regexp">/([0-9]&#123;3&#125;)/g</span>, <span class="string">"$1,"</span>).split(<span class="string">""</span>)</span><br><span class="line">          .reverse().join(<span class="string">""</span>);</span><br><span class="line">        <span class="comment">//如果有小数点之后的部分,就拼接</span></span><br><span class="line">        <span class="keyword">if</span> (splitStr[<span class="number">1</span>]) &#123;</span><br><span class="line">          newStr += <span class="string">"."</span> + splitStr[<span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> newStr;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>方法二（参考：<a href="https://juejin.im/post/5abb5b01f265da237f1e5a92" target="_blank" rel="noopener">把一串数字表示成千位分隔形式——JS正则表达式的应用</a>）<br>思路：<br>因为需要从右向左匹配，所以结尾必须有<font color="orange">$</font>字符。三位数字用<font color="orange">\d{3}</font>表示，由于我们不知道有多少组这样的数字，所以需要用<font color="orange">\d{3}+</font>来匹配任何包含至少一组三位数字的字符串。所以<font color="orange">/(\d{3})+$/g</font>表示作为结尾的3个或者3的倍数个数字。<br>由于要替换的是每三位数字（从末尾起）前面紧挨的<font color="orange">“”</font>，所以需要用到正向预查，即<font color="orange">?=n</font>（匹配任何其后紧跟指定字符串n的字符串）。关于正向预查的用法，这里举个例子：将字符串<font color="orange">“abaaaaa”</font>中后面给这字符b的那个字符a表示处理啊，于是可以像下面这样写：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str = <span class="string">"abaaaaa"</span>,</span><br><span class="line">    reg = <span class="regexp">/a(?=b)/g</span>;</span><br><span class="line"><span class="built_in">console</span>.log(str.match(reg)); <span class="comment">// ["a"]</span></span><br></pre></td></tr></table></figure>
+<p>现在回到我们千分位的问题中：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str = <span class="string">"10000000000"</span>,</span><br><span class="line">    reg = <span class="regexp">/(?=(\d&#123;3&#125;)+$)/g</span>;</span><br><span class="line"><span class="built_in">console</span>.log(str.match(reg)); <span class="comment">// ["", "", ""]</span></span><br></pre></td></tr></table></figure>
+<p>为什么<font color="orange">(?=…)</font>前面什么也不写？因为我们要找的是哪些后面紧跟着三位数字的<font color="orange">“”</font>，空当然什么都不用写。接着我们就对这三个空进行替换：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str = <span class="string">"10000000000"</span>,</span><br><span class="line">    reg = <span class="regexp">/(?=(\d&#123;3&#125;)+$)/g</span>;</span><br><span class="line"><span class="built_in">console</span>.log(str.replace(reg, <span class="string">","</span>)); <span class="comment">// 10,000,000,000</span></span><br></pre></td></tr></table></figure>
+<p>但是！如果是12为数字呢，12是3的倍数，来看一下结果有什么不同：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str = <span class="string">"100000000000"</span>,</span><br><span class="line">    reg = <span class="regexp">/(?=(\d&#123;3&#125;)+$)/g</span>;</span><br><span class="line"><span class="built_in">console</span>.log(str.replace(reg, <span class="string">","</span>)); <span class="comment">// ,100,000,000,000</span></span><br></pre></td></tr></table></figure>
+<p>可以发现多了一个<font color="orange">,</font>。怎么解决呢？在<font color="orange">\d</font>前面加一个非单词边界<font color="orange">\B</font>，用来表示所匹配的这个空后面不能是一个单词边界，这样就可以把最前面的<font color="orange">,</font>去掉。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> str = <span class="string">"100000000000"</span>,</span><br><span class="line">    reg = <span class="regexp">/(?=(\B\d&#123;3&#125;)+$)/g</span>;</span><br><span class="line"><span class="built_in">console</span>.log(str.replace(reg, <span class="string">","</span>)); <span class="comment">// 100,000,000,000</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-5-总结"><a href="#1-5-总结" class="headerlink" title="1.5 总结"></a>1.5 总结</h3><ul>
+<li><font color="orange">g</font>表示全局匹配的修饰符，全局匹配指查找所有匹配而非在找到第一个匹配后停止。</li>
+<li><font color="orange">$</font>表示结尾的量词，如<font color="orange">n$</font>，匹配的是任何以n为结尾的字符串。</li>
+<li><font color="orange">\d</font>是查找数字的元字符。</li>
+<li><font color="orange">n{X}</font>是匹配包含X个n的序列的字符串的量词。</li>
+<li><font color="orange">n+</font>是匹配任何包含至少一个n的字符串的量词。</li>
+<li><font color="orange">?=n</font>正向预查，用于匹配任何其后紧接着指定字符串n的字符串。</li>
+<li><font color="orange">match()</font> String对象的方法，作用是找到一个或多个正则表达式的匹配。</li>
+<li><font color="orange">replace()</font> String对象的方法，作用是替换与正则表达式匹配的字串。</li>
+<li><font color="orange">\B</font>是表示匹配非单词边界的元字符，与其互为补集的元字符是<font color="orange">\b</font>，表示匹配单词边界。</li>
 </ul>
  
       <!-- reward -->
