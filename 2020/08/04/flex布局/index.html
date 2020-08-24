@@ -99,7 +99,7 @@
     <div class="article-entry" itemprop="articleBody">
        
   <p>flex布局是目前比较常用的布局，虽然每次常用的就有flex-direction和flex-wrap这两个属性，但还是想将其所有的属性总结描述一下。在一开始使用flex布局的时候翻查了很多博客，最后发现还是阮一峰老师的最经典，因此本文主要是搬抄阮老师的博客，自己手写一遍加深印象。<br>阮老师博客传送门：<a href="https://z.didi.cn/s7VfUlnZOoOLc" target="_blank" rel="noopener">flex布局教程：语法篇</a>  </p>
-<h2 id="一、基本概念"><a href="#一、基本概念" class="headerlink" title="一、基本概念"></a>一、基本概念</h2><p>采用flex布局的元素，成为flex容器，它的所有子元素自动成为容器成员，成为flex项目。<br><img src="../img/flex-1.png" alt="image"><br>容器默认存在两根轴：水平的主轴（main axis）和垂直的交叉轴（cross axis）。项目默认沿主轴排列。单个项目占据的主轴空间叫做<font color="pink">main size</font>，占据的交叉轴空间叫做<font color="pink">cross size</font></p>
+<h2 id="一、基本概念"><a href="#一、基本概念" class="headerlink" title="一、基本概念"></a>一、基本概念</h2><p>采用flex布局的元素，成为flex容器，它的所有子元素自动成为容器成员，成为flex项目。<br><img src="https://res.cloudinary.com/liran123456/image/upload/v1598252036/blog/flex%E5%B8%83%E5%B1%80/flex-1_bmojdz.png" alt="image"><br>容器默认存在两根轴：水平的主轴（main axis）和垂直的交叉轴（cross axis）。项目默认沿主轴排列。单个项目占据的主轴空间叫做<font color="pink">main size</font>，占据的交叉轴空间叫做<font color="pink">cross size</font></p>
 <p><font color="orange">注意：设置flex布局后，子元素的float、clear和vertical-align属性将失效。</font>  </p>
 <h2 id="二、容器的属性"><a href="#二、容器的属性" class="headerlink" title="二、容器的属性"></a>二、容器的属性</h2><p>以下6个属性设置在容器上。</p>
 <table width="400px"><tr><td bgcolor=lightgray><font color="black">1. flex-direction</font></br>
@@ -112,7 +112,7 @@
 
 <h3 id="2-1-flex-direction属性"><a href="#2-1-flex-direction属性" class="headerlink" title="2.1 flex-direction属性"></a>2.1 flex-direction属性</h3><p>决定主轴的方向（及项目的排列方向）</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.box &#123;</span><br><span class="line">  flex-direction: row | row-reverse | column | column-reverse</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="../img/flex-2.png" alt="image"></p>
+<p><img src="https://res.cloudinary.com/liran123456/image/upload/v1598252035/blog/flex%E5%B8%83%E5%B1%80/flex-2_kloub7.png" alt="image"></p>
 <ul>
 <li>row(默认值)：主轴为水平方向，起点在左端。</li>
 <li>row-reverse: 主轴为水平方向，起点在右端。</li>
@@ -122,15 +122,15 @@
 <h3 id="2-2-flex-wrap属性"><a href="#2-2-flex-wrap属性" class="headerlink" title="2.2 flex-wrap属性"></a>2.2 flex-wrap属性</h3><p>决定换行方式。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.box &#123;</span><br><span class="line">  flex-wrap: nowrap | wrap | wrap-reverse;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
-<li>nowrap(默认): 不换行。<br><img src="../img/flex-3.1.png" alt="image"></li>
-<li>wrap: 换行，第一行在上方。<br><img src="../img/flex-3.2.png" alt="image"></li>
-<li>wrap-reverse: 换行，第一行在下方。<br><img src="../img/flex-3.3.png" alt="image"></li>
+<li>nowrap(默认): 不换行。<br><img src="https://res.cloudinary.com/liran123456/image/upload/v1598252066/blog/flex%E5%B8%83%E5%B1%80/flex-3.1_crntuq.png" alt="image"></li>
+<li>wrap: 换行，第一行在上方。<br><img src="https://res.cloudinary.com/liran123456/image/upload/v1598252036/blog/flex%E5%B8%83%E5%B1%80/flex-3.2_tdouqy.png" alt="image"></li>
+<li>wrap-reverse: 换行，第一行在下方。<br><img src="https://res.cloudinary.com/liran123456/image/upload/v1598252068/blog/flex%E5%B8%83%E5%B1%80/flex-3.3_yt5d13.png" alt="image"></li>
 </ul>
 <h3 id="2-3-flex-flow属性"><a href="#2-3-flex-flow属性" class="headerlink" title="2.3 flex-flow属性"></a>2.3 flex-flow属性</h3><p>是flex-direction和flex-wrap的简写形式，默认值为<font color="orange">row nowrap</font></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.box &#123;</span><br><span class="line">  flex-flow: &lt;flex-direction&gt; || &lt;flex-wrap&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="2-4-justify-content属性"><a href="#2-4-justify-content属性" class="headerlink" title="2.4 justify-content属性"></a>2.4 justify-content属性</h3><p>定义了项目在主轴上的对齐方式。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.box &#123;</span><br><span class="line">  justify-content: flex-start | flex-end | center | space-between | space-around;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="../img/flex-4.png" alt="image"></p>
+<p><img src="https://res.cloudinary.com/liran123456/image/upload/v1598252068/blog/flex%E5%B8%83%E5%B1%80/flex-4_bmbbse.png" alt="image"></p>
 <ul>
 <li>flex-start(默认值): 左对齐。</li>
 <li>flex-end: 右对齐。</li>
@@ -140,7 +140,7 @@
 </ul>
 <h3 id="2-5-align-items属性"><a href="#2-5-align-items属性" class="headerlink" title="2.5 align-items属性"></a>2.5 align-items属性</h3><p>定义项目在交叉轴上如何对齐。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.box &#123;</span><br><span class="line">  align-items: flex-start | flex-end | center | baseline | stretch;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="../img/flex-5.png" alt="image"></p>
+<p><img src="https://res.cloudinary.com/liran123456/image/upload/v1598252068/blog/flex%E5%B8%83%E5%B1%80/flex-5_cfpbbg.png" alt="image"></p>
 <ul>
 <li>flex-start(默认值): 交叉轴的 起点对齐。</li>
 <li>flex-end: 交叉轴的终点对齐。</li>
@@ -150,7 +150,7 @@
 </ul>
 <h3 id="2-6-align-content属性"><a href="#2-6-align-content属性" class="headerlink" title="2.6 align-content属性"></a>2.6 align-content属性</h3><p>定义了多根轴线的对齐方式，如果项目只有一根轴线，该属性不起作用。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.box &#123;</span><br><span class="line">  align-content: flex-start | flex-end | center | space-between | space-around | stretch;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="../img/flex-6.png" alt="image"></p>
+<p><img src="https://res.cloudinary.com/liran123456/image/upload/v1598252071/blog/flex%E5%B8%83%E5%B1%80/flex-6_g2sind.png" alt="image"></p>
 <ul>
 <li>flex-start: 与交叉轴的起点对齐。</li>
 <li>flex-end: 与交叉轴的终点对齐。</li>
@@ -170,13 +170,13 @@
 
 <h3 id="3-1-order属性"><a href="#3-1-order属性" class="headerlink" title="3.1 order属性"></a>3.1 order属性</h3><p>定义项目的排列顺序。数值越小，排列越靠前，默认为0。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.item &#123;</span><br><span class="line">  order: &lt;integer&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="../img/flex-7.png" alt="image"></p>
+<p><img src="https://res.cloudinary.com/liran123456/image/upload/v1598252067/blog/flex%E5%B8%83%E5%B1%80/flex-7_m0iefm.png" alt="image"></p>
 <h3 id="3-2-flex-grow属性"><a href="#3-2-flex-grow属性" class="headerlink" title="3.2 flex-grow属性"></a>3.2 flex-grow属性</h3><p>定义项目的放大比例，默认为0，即如果存在剩余空间，也不放大。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.item &#123;</span><br><span class="line">  flex-grow: &lt;number&gt;; &#x2F;* default 0 *&#x2F;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="../img/flex-8.png" alt="image"><br>如果所有项目的flex-grow属性都为1，则它们将等分剩余空间（如果有的话）。如果一个项目的flex-grow属性为2，其他项目都为1，则前者占据剩余空间将比其他项多一倍。</p>
+<p><img src="https://res.cloudinary.com/liran123456/image/upload/v1598252069/blog/flex%E5%B8%83%E5%B1%80/flex-8_isxbo3.png" alt="image"><br>如果所有项目的flex-grow属性都为1，则它们将等分剩余空间（如果有的话）。如果一个项目的flex-grow属性为2，其他项目都为1，则前者占据剩余空间将比其他项多一倍。</p>
 <h3 id="3-3-flex-shrink属性"><a href="#3-3-flex-shrink属性" class="headerlink" title="3.3 flex-shrink属性"></a>3.3 flex-shrink属性</h3><p>定义了项目的缩小比例，默认为1，即如果空间不足，该项目将缩小。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.item &#123;</span><br><span class="line">  flex-shrink: &lt;number&gt; &#x2F;* default 1 *&#x2F;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="../img/flex-9.png" alt="image"><br>如果所有项目的flex-shrink属性都为1，当空间不足时，都将等比列缩小。如果一个项目的flex-shrink属性为0，其他项目都为1，则空间不足时，前者不缩小。（负值对该属性无效）。</p>
+<p><img src="https://res.cloudinary.com/liran123456/image/upload/v1598252069/blog/flex%E5%B8%83%E5%B1%80/flex-9_o8sym1.png" alt="image"><br>如果所有项目的flex-shrink属性都为1，当空间不足时，都将等比列缩小。如果一个项目的flex-shrink属性为0，其他项目都为1，则空间不足时，前者不缩小。（负值对该属性无效）。</p>
 <h3 id="4-4-flex-basis属性"><a href="#4-4-flex-basis属性" class="headerlink" title="4.4 flex-basis属性"></a>4.4 flex-basis属性</h3><p>定义了在分配多余空间之前，醒目占据的主轴空间（main size）。浏览器根据这个属性，计算主轴是否有多余空间，默认值为auto，即项目本来的大小。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.item &#123;</span><br><span class="line">  flex-basis: &lt;length&gt; | auto; &#x2F;* default auto *&#x2F;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>可以设为跟width或height属性一样的值，则项目将占据固定空间。</p>
@@ -185,7 +185,7 @@
 <p>该属性有两个快捷值：<font color="orange">auto(1 1 auto)</font>和<font color="orange">none(0 0 auto)</font><br>建议优先使用这个属性，而不是单独写三个分离的属性，因为浏览器会推算相关值。</p>
 <h3 id="3-6-align-self属性"><a href="#3-6-align-self属性" class="headerlink" title="3.6 align-self属性"></a>3.6 align-self属性</h3><p>align-self属性允许单个项目有与其他项目不一样的对齐方式，可覆盖align-items属性。默认值为<font color="orange">auto</font>，表示继承父元素的align-items属性，如果没有父元素，则等同于<font color="orange">stretch</font>.</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.item &#123;</span><br><span class="line">  align-self: auto | flex-start | flex-end | center | baseline | stretch;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="../img/flex-10.png" alt="image"><br>该属性可取6个值，除了auto，其他都与align-items属性完全一致。</p>
+<p><img src="https://res.cloudinary.com/liran123456/image/upload/v1598252069/blog/flex%E5%B8%83%E5%B1%80/flex-10_d3uumu.png" alt="image"><br>该属性可取6个值，除了auto，其他都与align-items属性完全一致。</p>
  
       <!-- reward -->
       <!-- 
