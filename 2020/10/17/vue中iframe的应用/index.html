@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    vue |  Cherry Blog
+    vue中iframe的应用 |  Cherry Blog
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -55,7 +55,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  vue
+  vue中iframe的应用
 </h1>
  
 
@@ -74,7 +74,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">511</span>
+            <span class="post-count">530</span>
         </span>
     </span>
 
@@ -98,7 +98,8 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h4 id="最近项目中有个需求，就是将keynote中的ppt转成html，然后用iframe嵌入vue中，并在外部可以出发html上展示的ppt的上一页和下一页功能，这就涉及到vue和iframe之间的通信。记录一下。"><a href="#最近项目中有个需求，就是将keynote中的ppt转成html，然后用iframe嵌入vue中，并在外部可以出发html上展示的ppt的上一页和下一页功能，这就涉及到vue和iframe之间的通信。记录一下。" class="headerlink" title="最近项目中有个需求，就是将keynote中的ppt转成html，然后用iframe嵌入vue中，并在外部可以出发html上展示的ppt的上一页和下一页功能，这就涉及到vue和iframe之间的通信。记录一下。"></a>最近项目中有个需求，就是将keynote中的ppt转成html，然后用iframe嵌入vue中，并在外部可以出发html上展示的ppt的上一页和下一页功能，这就涉及到vue和iframe之间的通信。记录一下。</h4><p>先写一个简单到htmlDemo</p>
+  <p>最近项目中有个需求，就是将keynote中的ppt转成html，然后用iframe嵌入vue中，并在外部可以出发html上展示的ppt的上一页和下一页功能，这就涉及到vue和iframe之间的通信。记录一下。</p>
+<p>先写一个简单到htmlDemo</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">id</span>=<span class="string">"mainIframe"</span> <span class="attr">ref</span>=<span class="string">"mainIframe"</span> <span class="attr">name</span>=<span class="string">"mainIframe"</span> <span class="attr">:src</span>=<span class="string">"./demo.html"</span> <span class="attr">frameborder</span>=<span class="string">"0"</span> <span class="attr">scrolling</span>=<span class="string">"auto"</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="actionscript">  name: <span class="string">'...'</span>,</span></span><br><span class="line">  props: &#123;&#125;,</span><br><span class="line">  mounted () &#123;&#125;,</span><br><span class="line">  methods: &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">lang</span>=<span class="string">"less"</span> <span class="attr">scoped</span>&gt;</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <h2 id="父传子（vue-–-gt-iframe）"><a href="#父传子（vue-–-gt-iframe）" class="headerlink" title="父传子（vue –&gt; iframe）"></a>父传子（vue –&gt; iframe）</h2><h3 id="1-postMessage"><a href="#1-postMessage" class="headerlink" title="1. postMessage"></a>1. postMessage</h3><p>首先在父组件mounted的时候，要先获取到iframe的内容窗口：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在mounted生命周期中获取iframe的内容窗口</span></span><br><span class="line"><span class="keyword">this</span>.iframeWin = <span class="keyword">this</span>.$refs.mainIframe.contentWindow</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在methods中定义方法，向iframe传值时调用</span></span><br><span class="line">public sendMessage (val) &#123;</span><br><span class="line">  <span class="comment">// 外部vue向iframe内部传数据</span></span><br><span class="line">  <span class="keyword">this</span>.iframeWin.postMessage(&#123;</span><br><span class="line">    cmd: <span class="string">'returnInfo'</span>,</span><br><span class="line">    params: &#123;&#125;</span><br><span class="line">  &#125;, <span class="string">'*'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -111,6 +112,7 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// methods中定义方法</span></span><br><span class="line"><span class="built_in">window</span>.parent.postMessage(&#123;</span><br><span class="line">  cmd: <span class="string">'returnInfo'</span>,</span><br><span class="line">  params: &#123;</span><br><span class="line">    info: <span class="string">'0101听到请回答'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;, <span class="string">'*'</span>)</span><br></pre></td></tr></table></figure>
 <p>父组件接收</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mounted 生命周期中定义监听</span></span><br><span class="line">mounted() &#123;</span><br><span class="line">    <span class="built_in">window</span>.addEventListener(<span class="string">"message"</span>, <span class="keyword">this</span>.handleMessage)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 同样在methods中定义一个方法</span></span><br><span class="line">handleMessage (event) &#123;</span><br><span class="line">  <span class="keyword">var</span> data = event.data;</span><br><span class="line">  <span class="keyword">switch</span> (data.cmd) &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="string">'returnInfo'</span>:</span><br><span class="line">        <span class="keyword">this</span>.info = data.info</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>参考博客：<br><a href="https://www.cnblogs.com/clwydjgs/p/11898622.html" target="_blank" rel="noopener">vue项目iframe的传值问题</a><br><a href="https://juejin.im/post/6844904126879367176" target="_blank" rel="noopener">vue中iframe的传值</a><br><a href="https://blog.csdn.net/qq_34335450/article/details/99851356" target="_blank" rel="noopener">postMessage和addEventListener踩坑</a></p>
 <h2 id="未完待续…补充完善postMessage的相关原理"><a href="#未完待续…补充完善postMessage的相关原理" class="headerlink" title="未完待续…补充完善postMessage的相关原理"></a>未完待续…补充完善postMessage的相关原理</h2> 
       <!-- reward -->
       <!-- 
@@ -182,13 +184,22 @@
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue/" rel="tag">vue</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/study/" rel="tag">study</a></li></ul>
 
     </footer>
   </div>
 
    
   <nav class="article-nav">
+    
+      <a href="/2020/10/17/css%E4%B8%AD%E7%9A%84%E4%BC%AA%E7%B1%BB%E5%92%8C%E4%BC%AA%E5%85%83%E7%B4%A0/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            css中的伪类和伪元素
+          
+        </div>
+      </a>
     
     
       <a href="/2020/08/24/mapbox%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BA%94%E7%94%A8/" class="article-nav-link">

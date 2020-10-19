@@ -101,6 +101,274 @@
     
     
     <article
+  id="blog-css中的伪类和伪元素"
+  class="article article-type-blog"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2020/10/17/css%E4%B8%AD%E7%9A%84%E4%BC%AA%E7%B1%BB%E5%92%8C%E4%BC%AA%E5%85%83%E7%B4%A0/"
+    >css中的伪类和伪元素</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/10/17/css%E4%B8%AD%E7%9A%84%E4%BC%AA%E7%B1%BB%E5%92%8C%E4%BC%AA%E5%85%83%E7%B4%A0/" class="article-date">
+  <time datetime="2020-10-17T08:14:11.000Z" itemprop="datePublished">2020-10-17</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/css/">css</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="1-伪类与伪元素的区别"><a href="#1-伪类与伪元素的区别" class="headerlink" title="1. 伪类与伪元素的区别"></a>1. 伪类与伪元素的区别</h2><h3 id="1）-表示方法不同"><a href="#1）-表示方法不同" class="headerlink" title="1） 表示方法不同"></a>1） 表示方法不同</h3><p>css2中伪类、伪元素都是用<font color="orange"> : </font>表示，css2.1后规定，伪类用<font color="orange"> : </font>表示，伪元素用<font color="orange"> :: </font>表示，浏览器同样接受css2时代已经存在的伪元素(<font color="orange">:before, :after, :first-line, :first-letter等</font>)的单冒号的写法。对于css2之后的所有新增的伪元素(如<font color="orange">::selection</font>), 应该采用双冒号的写法。但是因为兼容性问题，大部分还是用的单冒号。   </p>
+<h3 id="2）定义不同"><a href="#2）定义不同" class="headerlink" title="2）定义不同"></a>2）定义不同</h3><p><strong>伪类</strong>: 核心是选择那些不能够被普通选择器选择的文档之外的元素，比如<font color="orange"> :hover </font>。<br><strong>伪元素</strong>: 核心是需要创建通常不存在与文档中的元素，比如<font color="orange"> ::before </font>。</p>
+<h3 id="3-种类不同"><a href="#3-种类不同" class="headerlink" title="3) 种类不同"></a>3) 种类不同</h3><ul>
+<li><p>伪类种类    </p>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1603102850/blog/css%E4%BC%AA%E7%B1%BB%E5%92%8C%E4%BC%AA%E5%85%83%E7%B4%A0-7_jnoyze.png"></scr></center>
+常用的伪类有下面两种：  
+</li>
+<li><p>UI伪类：会在html元素处于某种状态时（比如鼠标指针位于链接式上），为该元素应用css样式；</p>
+</li>
+<li><p>结构化伪类：会在标记中存在某种结构上的关系时（如某个元素的一组元素中的第一个或者最后一个），为响应元素应用css样式。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>UI伪类</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>:active</td>
+<td>将样式添加到被激活的元素</td>
+</tr>
+<tr>
+<td>:focus</td>
+<td>将样式添加到被选中的元素</td>
+</tr>
+<tr>
+<td>:hover</td>
+<td>当鼠标悬浮在元素上方时，向元素添加样式</td>
+</tr>
+<tr>
+<td>:link</td>
+<td>将特殊的样式添加到未被访问过的链接</td>
+</tr>
+<tr>
+<td>:visited</td>
+<td>将特殊的样式添加到被访问过的链接</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>结构伪类</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>:first-child</td>
+<td>将特殊的样式添加到元素的第一个子元素</td>
+</tr>
+<tr>
+<td>:last-child</td>
+<td>选择父元素的倒数第一个子元素，相当于nth-last-child(1)</td>
+</tr>
+<tr>
+<td>:nth-child(n)</td>
+<td>选择父元素的第n个子元素，n从1开始计算</td>
+</tr>
+<tr>
+<td>:nth-last-child(n)</td>
+<td>选择父元素的倒数第n个自元素，n从1开始计算</td>
+</tr>
+<tr>
+<td>:first-of-type</td>
+<td>选择父元素下同种标签的第一个元素，相当于nth-of-type(1)</td>
+</tr>
+<tr>
+<td>:last-of-type</td>
+<td>选择父元素下同种标签的倒数第一个元素，相当于nth-last-of-type(1)</td>
+</tr>
+<tr>
+<td>:nth-of-type(n)</td>
+<td>选择使用同种标签的第n个元素</td>
+</tr>
+<tr>
+<td>:nth-last-of-type(n)</td>
+<td>选择同种标签的倒数第一个元素</td>
+</tr>
+<tr>
+<td>:only-child</td>
+<td>选择父元素下仅有的一个子元素</td>
+</tr>
+<tr>
+<td>:empty</td>
+<td>选择空结点，即没有子元素的元素，而且该元素也不包含任何文本节点</td>
+</tr>
+<tr>
+<td>:root</td>
+<td>选择文档的根元素，对于html文档，根元素永远是html</td>
+</tr>
+</tbody></table>
+<ul>
+<li>伪元素种类 </li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>UI伪类</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>::first-letter</td>
+<td>向文本的第一个字幕添加特殊样式</td>
+</tr>
+<tr>
+<td>::first-line</td>
+<td>向文本的首行添加特殊样式</td>
+</tr>
+<tr>
+<td>::before</td>
+<td>在元素之前添加内容</td>
+</tr>
+<tr>
+<td>::after</td>
+<td>在元素之后添加内容</td>
+</tr>
+<tr>
+<td>::selection</td>
+<td>匹配突出选中的文本（用鼠标选择文本时的文本），该伪元素只接受两个属性background/color</td>
+</tr>
+</tbody></table>
+<h2 id="2-优缺点"><a href="#2-优缺点" class="headerlink" title="2. 优缺点"></a>2. 优缺点</h2><p>伪元素的优缺点</p>
+<ul>
+<li>优点  <ol>
+<li>不占用DOM节点，减少DOM节点数；</li>
+<li>让css帮助解决了一部分javascript问题，简化了开发；</li>
+<li>不仅块级元素可以设置伪元素，大部分行级元素也可以避免增加毫无意义的页面元素。   </li>
+</ol>
+</li>
+<li>缺点<ol>
+<li>不利于调试；</li>
+<li>伪元素不真正在文档内容中提现，只是在视觉效果上体现，所以不能给伪元素添加具有实际意义的内容，这部分内容不会被搜索引擎抓取。</li>
+</ol>
+</li>
+</ul>
+<h2 id="3-注意事项"><a href="#3-注意事项" class="headerlink" title="3. 注意事项"></a>3. 注意事项</h2><ul>
+<li>伪元素如果没有设置content属性(可为空值)，那么伪元素是无用的(可以将伪元素的内容设置为空)，content插入的内容默认是inline元素，可以通过display:block改变；</li>
+<li>插入的内容在页面的源码里是不可见的，只能在css里面可见；</li>
+<li>插入的伪元素默认情况是内联元素，因此为了给插入元素赋予高度、外边距、填充等等，必须显示定义它是一个块级元素；</li>
+<li>典型的css继承规则适用于插入的伪元素，比如插入的字体，伪元素会像其他元素一样继承这些字体，同样的，伪元素不会继承没有自然继承自父元素的样式(如padding和margin)。</li>
+</ul>
+<h2 id="4-实战场景"><a href="#4-实战场景" class="headerlink" title="4. 实战场景"></a>4. 实战场景</h2><h3 id="伪类的使用场景"><a href="#伪类的使用场景" class="headerlink" title="伪类的使用场景"></a>伪类的使用场景</h3><ol>
+<li>表单校验<br>表单的校验中，常用到<font color="orange"> :required、:valid、:invalid </font>这三个伪类：</li>
+</ol>
+<ul>
+<li>:required，指具有required属性的表单元素；</li>
+<li>:valid，指匹配指定要求的表单元素；</li>
+<li>:invalid，指不匹配指定要求的表单元素。</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>input中类型为email的校验<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>符合email校验规则<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"email"</span> <span class="attr">required</span> <span class="attr">placeholder</span>=<span class="string">"请输入"</span> <span class="attr">value</span>=<span class="string">"24238477@qq.com"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>不符合email校验规则<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"email"</span> <span class="attr">required</span> <span class="attr">placeholder</span>=<span class="string">"请输入"</span> <span class="attr">value</span>=<span class="string">"lalala"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>有required标识，但未填写<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"email"</span> <span class="attr">required</span> <span class="attr">placeholder</span>=<span class="string">"请输入"</span> <span class="attr">value</span>=<span class="string">""</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">// css</span><br><span class="line">input &#123;</span><br><span class="line">  &amp;:valid &#123;</span><br><span class="line">    border-color: green;</span><br><span class="line">    box-shadow: inset 5px 0 0 green;</span><br><span class="line">  &#125;</span><br><span class="line">  &amp;:invalid &#123;</span><br><span class="line">    border-color: red;</span><br><span class="line">    box-shadow: inset 5px 0 0 red;</span><br><span class="line">  &#125;</span><br><span class="line">  &amp;:required &#123;</span><br><span class="line">    border-color: red;</span><br><span class="line">    box-shadow: inset 5px 0 0 red;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>效果如下：   </p>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1603092720/blog/css%E4%BC%AA%E7%B1%BB%E4%B8%8E%E4%BC%AA%E5%85%83%E7%B4%A0_yflmaj.png" width="50%"></img></center>
+
+<ol start="2">
+<li><p>折叠面板<br>之前只能通过js来实现折叠面板的显示或隐藏，现在可以通过目标伪类<font color="orange"> :target </font>来实现。:target是文档的内部链接，即URL后面跟有锚名称 #，指向文档内某个具体的元素。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"t-collapse"</span>&gt;</span></span><br><span class="line">  // 在url最后添加 #modal1，使得target生效</span><br><span class="line">  <span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">"collapse-target"</span> <span class="attr">href</span>=<span class="string">"#modal1"</span>&gt;</span>target 1<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"collapse-body"</span> <span class="attr">id</span>=<span class="string">"modal1"</span>&gt;</span></span><br><span class="line">  // 将url的#modal1 变为 #，使得target失效</span><br><span class="line">      <span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">"collapse-close"</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span>target 1<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>...<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">// css</span><br><span class="line">.t-collapse &#123;</span><br><span class="line">  &gt;.collapse-body &#123;</span><br><span class="line">    &amp;:target &#123;</span><br><span class="line">      display: block;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>定位第n个元素<br>可以通过<font color="orange"> :nth-child(n) </font>与<font color="orange"> :nth-of-type(n) </font>来定位一系列标签中的某个元素。区别：  </p>
+</li>
+</ol>
+<ul>
+<li>n可以是&gt;0的数字，或者类似2n+1的表达式，再或者是even/odd；</li>
+<li>:nth-of-type(n)除了关注n，还需要关注最前面的类型；</li>
+<li>:nth-child(n)关注的是父元素下的第n个子元素，与类型无关。<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>这是标题<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>第一个段落。<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>第二个段落。<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>第三个段落。<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>第四个段落。<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>第五个段落。<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1603095137/blog/css%E4%BC%AA%E7%B1%BB%E5%92%8C%E4%BC%AA%E5%85%83%E7%B4%A0-1_zoxtzj.png"></img></center>
+
+</li>
+</ul>
+<h3 id="伪元素的使用场景"><a href="#伪元素的使用场景" class="headerlink" title="伪元素的使用场景"></a>伪元素的使用场景</h3><ol>
+<li><p>清除浮动<br>通常我们清除浮动的方式就是在浮动元素后面添加一个空的div标签，然后设置它的清除浮动样式。如果使用伪元素::after，就不需要添加无意义的div标签在html中。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ul::after &#123;</span><br><span class="line">  clear: both;</span><br><span class="line">  content: '';</span><br><span class="line">  display: block;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>美化选中的文本<br>在网页中，默认的划词效果是原字色保持不变，划过时背景变为蓝底色。我们可以通过<font color="orange"> ::selection </font>来实现定制。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Custom text selection color<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">// css</span><br><span class="line">::selection &#123;</span><br><span class="line">  color: red;</span><br><span class="line">  background-color: yellow;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>效果如下：  </p>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1603096679/blog/css%E4%BC%AA%E7%B1%BB%E5%92%8C%E4%BC%AA%E5%85%83%E7%B4%A0-2_pdwc8z.png" width="50%"></img></center>
+</li>
+<li><p>::before和::after<br>::before和::after必须配合content属性来使用，content用来定义插入的内容，必须有值，至少是空。默认情况下，伪元素的display的默认值是inline，可以通过设置display:block来改变其显示。content可以取以下值：</p>
+</li>
+</ol>
+<ul>
+<li><p>string  </p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span></span><br><span class="line"><span class="css"><span class="selector-tag">p</span><span class="selector-pseudo">::before</span>&#123;</span></span><br><span class="line">    content: "《";</span><br><span class="line">    color: red;</span><br><span class="line">&#125;</span><br><span class="line"><span class="css"><span class="selector-tag">p</span><span class="selector-pseudo">::after</span>&#123;</span></span><br><span class="line">    content: "》";</span><br><span class="line">    color: red;</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>平凡的世界<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>效果： 《平凡的世界》</p>
+</li>
+<li><p>attr()<br>通过attr()调用当前元素的属性，比如将图片alt提示文字或者链接的href地址显示出来。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="selector-tag">a</span><span class="selector-pseudo">::after</span>&#123;</span></span><br><span class="line">        content: "("attr(href)")";</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"http://www.baidu.com"</span>&gt;</span>百度<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>效果：</p>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1603102971/blog/css%E4%BC%AA%E7%B1%BB%E5%92%8C%E4%BC%AA%E5%85%83%E7%B4%A0-8_kv5zva.png" width="50%"></img></center>
+</li>
+<li><p>rl()/uri()<br>用于引用媒体文件。<br>举例：“百度”文字前面给出一张图片，后面给出herf属性。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span></span><br><span class="line"><span class="css">    <span class="selector-tag">a</span><span class="selector-pseudo">::before</span>&#123;</span></span><br><span class="line">        content: url("https://www.baidu.com/img/baidu_jgylogo3.gif");</span><br><span class="line">    &#125;</span><br><span class="line"><span class="css">  <span class="selector-tag">a</span><span class="selector-pseudo">::after</span>&#123;</span></span><br><span class="line">      content: "("attr(href)")";</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"http://www.baidu.com"</span>&gt;</span>百度<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br><span class="line">```   </span><br><span class="line">效果：  </span><br><span class="line"><span class="tag">&lt;<span class="name">center</span>&gt;</span><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"https://res.cloudinary.com/dg7gqrbda/image/upload/v1603098415/blog/css%E4%BC%AA%E7%B1%BB%E5%92%8C%E4%BC%AA%E5%85%83%E7%B4%A0-3_n7vtyw.png"</span> <span class="attr">width</span>=<span class="string">"50%"</span>&gt;</span><span class="tag">&lt;/<span class="name">img</span>&gt;</span><span class="tag">&lt;/<span class="name">center</span>&gt;</span></span><br><span class="line"></span><br><span class="line">+ counter()   </span><br><span class="line">调用计数器，可以不使用列表元素实现序号功能。配合counter-increment和counter-reset属性使用。</span><br><span class="line">```html</span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span></span><br><span class="line">      body&#123;</span><br><span class="line">          counter-reset: section;</span><br><span class="line">      &#125;</span><br><span class="line">      h1&#123;</span><br><span class="line">          counter-reset: subsection;</span><br><span class="line">      &#125;</span><br><span class="line"><span class="css">      <span class="selector-tag">h1</span><span class="selector-pseudo">:before</span>&#123;</span></span><br><span class="line"><span class="css">          <span class="selector-tag">counter-increment</span><span class="selector-pseudo">:section</span>;</span></span><br><span class="line"><span class="css">          <span class="selector-tag">content</span><span class="selector-pseudo">:counter(section)</span> "、";</span></span><br><span class="line">      &#125;</span><br><span class="line"><span class="css">      <span class="selector-tag">h2</span><span class="selector-pseudo">:before</span>&#123;</span></span><br><span class="line"><span class="css">          <span class="selector-tag">counter-increment</span><span class="selector-pseudo">:subsection</span>;</span></span><br><span class="line">          content: counter(section) "." counter(subsection) "、";</span><br><span class="line">      &#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>HTML tutorials<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>HTML Tutorial<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>XHTML Tutorial<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>CSS Tutorial<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Scripting tutorials<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>JavaScript<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>VBScript<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>XML tutorials<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>XML<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>XSL<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>效果：</p>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1603098808/blog/css%E4%BC%AA%E7%B1%BB%E5%92%8C%E4%BC%AA%E5%85%83%E7%B4%A0-4_iyhcbv.png" width="50%"></img></center>
+</li>
+<li><p>给blockquote添加引号<br>有时会用到给blockquote引用段添加巨大的引号作为背景，可以用::before来代替background。好处是既可以给背景留下空间，还可以直接使用文字而非图片。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span></span><br><span class="line"><span class="css">  <span class="selector-tag">blockquote</span><span class="selector-pseudo">::before</span> &#123;</span></span><br><span class="line">    content: open-quote;</span><br><span class="line"><span class="css">    <span class="selector-tag">color</span>: <span class="selector-id">#ddd</span>;</span></span><br><span class="line">    z-index: -1;</span><br><span class="line"><span class="css">    <span class="selector-tag">font-size</span><span class="selector-pseudo">:80px</span>;</span></span><br><span class="line">  &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">blockquote</span>&gt;</span>引用一个段落,双引号用::before伪元素实现<span class="tag">&lt;/<span class="name">blockquote</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>效果：</p>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1603099099/blog/css%E4%BC%AA%E7%B1%BB%E5%92%8C%E4%BC%AA%E5%85%83%E7%B4%A0-5_ur2ypd.png" width="50%"></img></center>
+</li>
+<li><p>超链接特效<br>例：配合css定位实现鼠标hover时，超链接出现方括号的效果。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">type</span>=<span class="string">"text/css"</span>&gt;</span></span><br><span class="line">body&#123;</span><br><span class="line"><span class="css">    <span class="selector-tag">background-color</span>: <span class="selector-id">#425a6c</span>;</span></span><br><span class="line">&#125;</span><br><span class="line">    a &#123;</span><br><span class="line">    position: relative;</span><br><span class="line">    display: inline-block;</span><br><span class="line">    outline: none;</span><br><span class="line"><span class="css">    <span class="selector-tag">color</span>: <span class="selector-id">#fff</span>;</span></span><br><span class="line">    text-decoration: none;</span><br><span class="line">    font-size: 32px;</span><br><span class="line">    padding: 5px 20px;</span><br><span class="line">&#125;</span><br><span class="line"><span class="css"><span class="selector-tag">a</span><span class="selector-pseudo">:hover</span><span class="selector-pseudo">::before</span>, <span class="selector-tag">a</span><span class="selector-pseudo">:hover</span><span class="selector-pseudo">::after</span> &#123; <span class="attribute">position</span>: absolute; &#125;</span></span><br><span class="line"><span class="css"><span class="selector-tag">a</span><span class="selector-pseudo">:hover</span><span class="selector-pseudo">::before</span> &#123; <span class="attribute">content</span>: <span class="string">"\5B"</span>; <span class="attribute">left</span>: -<span class="number">10px</span>; &#125;</span></span><br><span class="line"><span class="css"><span class="selector-tag">a</span><span class="selector-pseudo">:hover</span><span class="selector-pseudo">::after</span> &#123; <span class="attribute">content</span>: <span class="string">"\5D"</span>; <span class="attribute">right</span>:  -<span class="number">10px</span>; &#125;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span>&gt;</span>鼠标移上去出现方括号<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>效果：</p>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1603099604/blog/css%E4%BC%AA%E7%B1%BB%E5%92%8C%E4%BC%AA%E5%85%83%E7%B4%A0-6_chckls.png" width="50%"></img></center>
+
+</li>
+</ul>
+<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h2><ul>
+<li>伪类和伪元素都是用来表示文档树以外的“元素”；</li>
+<li>伪类和伪元素分别用<font color="orange"> : </font>和<font color="orange"> :: </font>表示；</li>
+<li>最关键的区别是，如果没有伪类(伪元素), 是否需要添加元素才能达到目的，如果是则是伪元素，反之则是伪类；</li>
+<li>伪类只要不是互斥，可以叠加使用；伪元素在一个选择器中只能出现一次，并且只能出现在末尾；</li>
+<li>伪类与伪元素的优先级分别与类、标签的优先级相同。</li>
+</ul>
+<h2 id="参考博客："><a href="#参考博客：" class="headerlink" title="参考博客："></a>参考博客：</h2><p><a href="https://juejin.im/post/6844903810951806989" target="_blank" rel="noopener">伪类与伪元素的区别</a><br><a href="https://www.html.cn/qa/css3/17445.html" target="_blank" rel="noopener">css伪类的种类有哪些？</a><br><a href="https://juejin.im/post/6844903761891213320" target="_blank" rel="noopener">「前端面试题系列3」伪类与伪元素的区别及实战
+</a><br><a href="https://www.cnblogs.com/guangzhou11/p/7360589.html" target="_blank" rel="noopener">CSS3 ::before和::after伪元素的实际应用</a><br><a href="https://juejin.im/post/6844903969752350727" target="_blank" rel="noopener">伪类与伪元素的区别</a></p>
+ 
+      <!-- reward -->
+      <!--  -->
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/study/" rel="tag">study</a></li></ul>
+
+    </footer>
+  </div>
+
+     
+   
+</article>
+
+    
+    <article
   id="blog-vue中iframe的应用"
   class="article article-type-blog"
   itemscope
@@ -113,7 +381,7 @@
        
 <h2 itemprop="name">
   <a class="article-title" href="/2020/10/17/vue%E4%B8%ADiframe%E7%9A%84%E5%BA%94%E7%94%A8/"
-    >vue</a> 
+    >vue中iframe的应用</a> 
 </h2>
  
 
@@ -131,7 +399,8 @@
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h4 id="最近项目中有个需求，就是将keynote中的ppt转成html，然后用iframe嵌入vue中，并在外部可以出发html上展示的ppt的上一页和下一页功能，这就涉及到vue和iframe之间的通信。记录一下。"><a href="#最近项目中有个需求，就是将keynote中的ppt转成html，然后用iframe嵌入vue中，并在外部可以出发html上展示的ppt的上一页和下一页功能，这就涉及到vue和iframe之间的通信。记录一下。" class="headerlink" title="最近项目中有个需求，就是将keynote中的ppt转成html，然后用iframe嵌入vue中，并在外部可以出发html上展示的ppt的上一页和下一页功能，这就涉及到vue和iframe之间的通信。记录一下。"></a>最近项目中有个需求，就是将keynote中的ppt转成html，然后用iframe嵌入vue中，并在外部可以出发html上展示的ppt的上一页和下一页功能，这就涉及到vue和iframe之间的通信。记录一下。</h4><p>先写一个简单到htmlDemo</p>
+  <p>最近项目中有个需求，就是将keynote中的ppt转成html，然后用iframe嵌入vue中，并在外部可以出发html上展示的ppt的上一页和下一页功能，这就涉及到vue和iframe之间的通信。记录一下。</p>
+<p>先写一个简单到htmlDemo</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">id</span>=<span class="string">"mainIframe"</span> <span class="attr">ref</span>=<span class="string">"mainIframe"</span> <span class="attr">name</span>=<span class="string">"mainIframe"</span> <span class="attr">:src</span>=<span class="string">"./demo.html"</span> <span class="attr">frameborder</span>=<span class="string">"0"</span> <span class="attr">scrolling</span>=<span class="string">"auto"</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="actionscript">  name: <span class="string">'...'</span>,</span></span><br><span class="line">  props: &#123;&#125;,</span><br><span class="line">  mounted () &#123;&#125;,</span><br><span class="line">  methods: &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">lang</span>=<span class="string">"less"</span> <span class="attr">scoped</span>&gt;</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <h2 id="父传子（vue-–-gt-iframe）"><a href="#父传子（vue-–-gt-iframe）" class="headerlink" title="父传子（vue –&gt; iframe）"></a>父传子（vue –&gt; iframe）</h2><h3 id="1-postMessage"><a href="#1-postMessage" class="headerlink" title="1. postMessage"></a>1. postMessage</h3><p>首先在父组件mounted的时候，要先获取到iframe的内容窗口：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在mounted生命周期中获取iframe的内容窗口</span></span><br><span class="line"><span class="keyword">this</span>.iframeWin = <span class="keyword">this</span>.$refs.mainIframe.contentWindow</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在methods中定义方法，向iframe传值时调用</span></span><br><span class="line">public sendMessage (val) &#123;</span><br><span class="line">  <span class="comment">// 外部vue向iframe内部传数据</span></span><br><span class="line">  <span class="keyword">this</span>.iframeWin.postMessage(&#123;</span><br><span class="line">    cmd: <span class="string">'returnInfo'</span>,</span><br><span class="line">    params: &#123;&#125;</span><br><span class="line">  &#125;, <span class="string">'*'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -144,6 +413,7 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// methods中定义方法</span></span><br><span class="line"><span class="built_in">window</span>.parent.postMessage(&#123;</span><br><span class="line">  cmd: <span class="string">'returnInfo'</span>,</span><br><span class="line">  params: &#123;</span><br><span class="line">    info: <span class="string">'0101听到请回答'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;, <span class="string">'*'</span>)</span><br></pre></td></tr></table></figure>
 <p>父组件接收</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mounted 生命周期中定义监听</span></span><br><span class="line">mounted() &#123;</span><br><span class="line">    <span class="built_in">window</span>.addEventListener(<span class="string">"message"</span>, <span class="keyword">this</span>.handleMessage)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 同样在methods中定义一个方法</span></span><br><span class="line">handleMessage (event) &#123;</span><br><span class="line">  <span class="keyword">var</span> data = event.data;</span><br><span class="line">  <span class="keyword">switch</span> (data.cmd) &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="string">'returnInfo'</span>:</span><br><span class="line">        <span class="keyword">this</span>.info = data.info</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>参考博客：<br><a href="https://www.cnblogs.com/clwydjgs/p/11898622.html" target="_blank" rel="noopener">vue项目iframe的传值问题</a><br><a href="https://juejin.im/post/6844904126879367176" target="_blank" rel="noopener">vue中iframe的传值</a><br><a href="https://blog.csdn.net/qq_34335450/article/details/99851356" target="_blank" rel="noopener">postMessage和addEventListener踩坑</a></p>
 <h2 id="未完待续…补充完善postMessage的相关原理"><a href="#未完待续…补充完善postMessage的相关原理" class="headerlink" title="未完待续…补充完善postMessage的相关原理"></a>未完待续…补充完善postMessage的相关原理</h2> 
       <!-- reward -->
       <!--  -->
@@ -154,7 +424,7 @@
     
     <footer class="article-footer">
        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vue/" rel="tag">vue</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/study/" rel="tag">study</a></li></ul>
 
     </footer>
   </div>
@@ -741,7 +1011,7 @@
     
     <footer class="article-footer">
        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%AD%A3%E5%88%99/" rel="tag">正则</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/study/" rel="tag">study</a></li></ul>
 
     </footer>
   </div>
