@@ -95,7 +95,7 @@
     <div class="article-entry" itemprop="articleBody">
        
   <h3 id="1-写在前面"><a href="#1-写在前面" class="headerlink" title="1. 写在前面"></a>1. 写在前面</h3><p>之前遇到了文字向下偏移的情况，明明也没有也margin和padding，但是一直和外层的div框的位置有偏移的情况，最后才查出来是line-height的原因，那一刻我找到了自己在前端最不喜欢的东西—css。所以，写篇博客记录一下css中的line-height  </p>
-<h3 id="2-基本概念"><a href="#2-基本概念" class="headerlink" title="2. 基本概念"></a>2. 基本概念</h3><h4 id="2-1-定义与图解"><a href="#2-1-定义与图解" class="headerlink" title="2.1 定义与图解"></a>2.1 定义与图解</h4><p><font style="color:orange">行高：</font>两行文字的基线之间的距离。   </p>
+<h3 id="2-基本概念"><a href="#2-基本概念" class="headerlink" title="2. 基本概念"></a>2. 基本概念</h3><h3 id="2-1-定义与图解"><a href="#2-1-定义与图解" class="headerlink" title="2.1 定义与图解"></a>2.1 定义与图解</h3><p><font style="color:orange">行高：</font>两行文字的基线之间的距离。   </p>
 <center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1603247558/blog/css%20line-height/css-line-height-2_idypdl.png"></img></center> 
 <center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1603246719/blog/css%20line-height/line-height-1_awm66o.png"></img></center>
 
@@ -104,7 +104,7 @@
 由公式可以看出，当line-height < font-size的时候，半行距为负值，这个时候两行文字就会出现重叠，如下图所示：   
 <center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1603977019/blog/css%20line-height/css-line-height-3_gaq02k.png"></img></center>
 
-<h4 id="2-2-定义line-height的5种方式"><a href="#2-2-定义line-height的5种方式" class="headerlink" title="2.2 定义line-height的5种方式"></a>2.2 定义line-height的5种方式</h4><table>
+<h3 id="2-2-定义line-height的5种方式"><a href="#2-2-定义line-height的5种方式" class="headerlink" title="2.2 定义line-height的5种方式"></a>2.2 定义line-height的5种方式</h3><table>
 <thead>
 <tr>
 <th>定义</th>
@@ -138,7 +138,7 @@
 <td>数字与当前字体尺寸的乘积就是行间距</td>
 </tr>
 </tbody></table>
-<h4 id="2-3-有关line-height的继承"><a href="#2-3-有关line-height的继承" class="headerlink" title="2.3 有关line-height的继承"></a>2.3 有关line-height的继承</h4><p>有些css属性是可以继承的，对于line-height而言，继承有些复杂。   </p>
+<h3 id="2-3-有关line-height的继承"><a href="#2-3-有关line-height的继承" class="headerlink" title="2.3 有关line-height的继承"></a>2.3 有关line-height的继承</h3><p>有些css属性是可以继承的，对于line-height而言，继承有些复杂。   </p>
 <h4 id="2-3-1-百分比"><a href="#2-3-1-百分比" class="headerlink" title="2.3.1. 百分比"></a>2.3.1. 百分比</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">body &#123;</span><br><span class="line">  font-size: 16px;</span><br><span class="line">  line-height: 120%;</span><br><span class="line">&#125;</span><br><span class="line">h1 &#123; font-size: 32px &#125;</span><br><span class="line">p &#123; font-size: 16px &#125;</span><br><span class="line">#footer &#123; font-size: 12px &#125;</span><br></pre></td></tr></table></figure>
 <p>body中line-height的百分比(120%)和文字大小(16px)用来计算行高的具体值为16px * 120% = 19.2px，这个具体的值会被层叠元素继承下去，所有继承的元素会忽略本身的font-size，而使用相同的父元素计算出来的line-height的值。<br>element|font-size|line-height|计算后的line-height<br>–|–|–|–<br>body|16px|120%|16px*120%=<font style="color:orange">19.2px</font><br>h1|32px|继承的计算后的值|<font style="color:orange">19.2px</font><br>p|16px|继承的计算后的值|<font style="color:orange">19.2px</font><br>#footer|12px|继承的计算后的值|<font style="color:orange">19.2px</font><br>因为百分比的继承，继承的是计算后的具体的值，所以不会随着相关的font-size的不同，做相应的比例缩放，不管font-size的大小是多少，line-height都是固定值。</p>
 <h4 id="2-3-2-长度"><a href="#2-3-2-长度" class="headerlink" title="2.3.2. 长度"></a>2.3.2. 长度</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">body &#123;</span><br><span class="line">  font-size: 16px;</span><br><span class="line">  line-height: 20px;</span><br><span class="line">&#125;</span><br><span class="line">h1 &#123; font-size: 32px &#125;</span><br><span class="line">p &#123; font-size: 16px &#125;</span><br><span class="line">#footer &#123; font-size: 12px &#125;</span><br></pre></td></tr></table></figure>
