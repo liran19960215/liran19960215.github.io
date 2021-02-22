@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    span间距 |  Cherry Blog
+    css中的white-space |  Cherry Blog
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -44,7 +44,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-span间距"
+  id="post-css中的white-space"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -55,15 +55,15 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  span间距
+  css中的white-space
 </h1>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2021/02/22/span%E9%97%B4%E8%B7%9D/" class="article-date">
-  <time datetime="2021-02-22T03:06:24.000Z" itemprop="datePublished">2021-02-22</time>
+      <a href="/2021/02/22/css%E4%B8%AD%E7%9A%84white-space/" class="article-date">
+  <time datetime="2021-02-22T07:47:56.000Z" itemprop="datePublished">2021-02-22</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/css/">css</a>
@@ -74,7 +74,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">619</span>
+            <span class="post-count">873</span>
         </span>
     </span>
 
@@ -98,37 +98,83 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h2 id="1-写在前面"><a href="#1-写在前面" class="headerlink" title="1. 写在前面"></a>1. 写在前面</h2><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>hello<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>world<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1613964982/blog/span%E9%97%B4%E9%9A%94/span%E9%97%B4%E8%B7%9D-3_avkcga.png" style="height: 40px;" /></center>
-在开发过程中，发现span标签存在间距，但是并没有对span标签设置任何样式，所以很困惑，在网上查询资料后解决，在这里记录一下。
+  <h2 id="1-写在前面"><a href="#1-写在前面" class="headerlink" title="1. 写在前面"></a>1. 写在前面</h2><p>在开发过程中遇到以下场景，div没有固定的宽，需要根据内容自适应，并且不换行，这种情况下，white-space就起了很大作用。</p>
+<h2 id="2-值"><a href="#2-值" class="headerlink" title="2. 值"></a>2. 值</h2><p>HTML语言的空格处理，就是将多个空格或回车直接合并成单个空格，这样的处理过于粗糙，忽视了原始文本内部的空格可能是有意义的。css提供了white-space属性，可以提供更精确多元的空格处理方式，该属性一共有六个值，normal | nowrap | pre | pre-wrap | pre-line | inherit，下面依次介绍。inherit为继承父元素的属性，在这里就不介绍了。</p>
+<h3 id="2-1-white-space-normal"><a href="#2-1-white-space-normal" class="headerlink" title="2.1 white-space: normal"></a>2.1 white-space: normal</h3><p>white-space属性的默认值是normal，表示浏览器以正常方式处理空格。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>^^hellohellohello^hello</span><br><span class="line">world</span><br><span class="line"><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>为了更明显的展示空格，在这里我们以<font style="color: orange"> ^ </font>代表空格，可以看到上述文本前面有两个空格，文本内部有一个长单词、一个空格和换行符。</p>
+<p>给容器<font style="color: orange">&lt;p&gt;</font>指定一个较小的宽度，添加一个橘色的背景色，方便识别。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background</span>: orange;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1613985315/blog/css-white-space/whitespace-2_faj4km.png" style="height: 100px;"/></center>
+可以看到文首的空格被忽略，由于容器太窄，第一个单词溢出，然后在后面一个空格处换行，文本内部的换行符转成了空格。
 
-<h2 id="2-原因"><a href="#2-原因" class="headerlink" title="2. 原因"></a>2. 原因</h2><p>为什么我们没有设置margin或者pandding会出现间隔呢？<br>浏览器会将多个连续空格或者回车都解析成单个空格，所以上面两个span标签之间都回车就被解析成了单个空格，图片中的间距就是就是空格。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>hello world<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>hello</span><br><span class="line">    world</span><br><span class="line">  <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>hello<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>world<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1613964650/blog/span%E9%97%B4%E9%9A%94/span%E9%97%B4%E9%9A%94-2_meaoxj.png" style="height: 100px" /></center>
+<h3 id="2-2-white-space-nowrap"><a href="#2-2-white-space-nowrap" class="headerlink" title="2.2 white-space: nowrap"></a>2.2 white-space: nowrap</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">white-space</span>: nowrap;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当属性值为nowrap时，不会因为超出容器宽度而换行。</p>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1613985590/blog/css-white-space/whitespace-3_fyqyxg.png" style="height: 60px;"/></center>
 
-<h2 id="3-解决方案"><a href="#3-解决方案" class="headerlink" title="3. 解决方案"></a>3. 解决方案</h2><h3 id="3-1-移除空格"><a href="#3-1-移除空格" class="headerlink" title="3.1 移除空格"></a>3.1 移除空格</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>hello<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span>world<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>这样写会让我们的代码看起来不整洁，可读性较低，有些人是接受不了的。 </p>
-<p>或者</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>hello<span class="tag">&lt;/<span class="name">span</span></span></span><br><span class="line"><span class="tag">  &gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span>world<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>或者加注释</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>hello<span class="tag">&lt;/<span class="name">span</span>&gt;</span><span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">  --&gt;</span><span class="tag">&lt;<span class="name">span</span>&gt;</span>world<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1613965028/blog/span%E9%97%B4%E9%9A%94/span%E9%97%B4%E8%B7%9D-4_ndvj1i.png" style="height: 40px" /></center>
+<p><strong>拓展</strong>  </p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background</span>: orange;</span><br><span class="line">  <span class="attribute">white-space</span>: nowrap;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">  <span class="attribute">text-overflow</span>: ellipsis;</span><br><span class="line">&#125;</span><br><span class="line">``` </span><br><span class="line">&lt;font style="color: orange"&gt;white-space: nowrap;&lt;/font&gt;经常和&lt;font style="color: orange"&gt;overflow:hidden;&lt;/font&gt;、&lt;font style="color: orange"&gt;text-overflow: ellipsis;&lt;/font&gt;一起使用，来实现文本过长显示省略号的效果.</span><br><span class="line">&lt;center&gt;&lt;img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1613987553/blog/css-white-space/whitespace-7_fbrfrr.png" style="height: 50px;"/&gt;&lt;/center&gt;</span><br><span class="line"></span><br><span class="line">### 2<span class="selector-class">.3</span> <span class="selector-tag">white-space</span>: <span class="selector-tag">pre</span></span><br><span class="line">```<span class="selector-tag">css</span></span><br><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">white-space</span>: nowrap;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当属性值为pre时，就按照&lt;pre&gt;标签的方式处理.</p>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1613985802/blog/css-white-space/whitespace-4_nvzsxu.png" style="height: 80px;"/></center>
+效果和原始文本保持一致，文首的空格、内部的空格和换行符都保留了。
 
+<h3 id="2-4-white-space-pre-wrap"><a href="#2-4-white-space-pre-wrap" class="headerlink" title="2.4 white-space: pre-wrap"></a>2.4 white-space: pre-wrap</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">white-space</span>: pre-wrap;</span><br></pre></td></tr></table></figure>
+<p>当属性值为pre-wrap时，基本还是按照&lt;pre&gt;标签的方式处理，不同的是超出容器宽度时会发生换行。</p>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1613985990/blog/css-white-space/whitespace-5_lwfc7u.png" style="height: 150px;"/></center>
+文首的空格、内部的空格和换行符都保留了，超出容器的地方发生了换行。（注：可以发现多了一行空白行，这是因为文首是两个空格，接着展示<font style="color: orange">hellohellohello</font>这个长字符的时候，剩余的宽度展示不下，所以产生了换行；<font style="color: orange">hello</font>与<font style="color: orange">world</font>之前的换行时候代码中的换行符导致的。）
 
-<h3 id="3-2-通过css消除间距"><a href="#3-2-通过css消除间距" class="headerlink" title="3.2 通过css消除间距"></a>3.2 通过css消除间距</h3><p>使用margin/word-spacing/letter-spacing等。</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// margin</span></span><br><span class="line">&lt;div&gt;</span><br><span class="line">  &lt;span&gt;hello&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">  &lt;span style="margin-left: -5px;"&gt;world&lt;/</span>span&gt;</span><br><span class="line">&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">	</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/ word-spacing</span></span><br><span class="line"><span class="regexp">&lt;div style="word-spacing: -40px;"&gt;</span></span><br><span class="line"><span class="regexp">  &lt;span&gt;hello&lt;/</span>span&gt;</span><br><span class="line">  &lt;span&gt;world&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>div&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment">// letter-spacing</span></span><br><span class="line">&lt;div style=<span class="string">"letter-spacing: -6px;"</span>&gt;</span><br><span class="line">  &lt;span style=<span class="string">"letter-spacing: 0px;"</span>&gt;hello&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">  &lt;span style="letter-spacing: 0px;"&gt;world&lt;/</span>span&gt;</span><br><span class="line">&lt;<span class="regexp">/div&gt;</span></span><br></pre></td></tr></table></figure>
-<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1613965367/blog/span%E9%97%B4%E9%9A%94/span%E9%97%B4%E8%B7%9D-5_dkw1b6.png" style="height: 80px;" /></center>
+<h3 id="2-5-white-space-pre-line"><a href="#2-5-white-space-pre-line" class="headerlink" title="2.5 white-space: pre-line"></a>2.5 white-space: pre-line</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">white-space</span>: pre-line;</span><br></pre></td></tr></table></figure>
+<p>当属性值为pre-line时，意为保留换行符，除了换行符会原样输出外，其他均与white-space: normal的规则保持一致。</p>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1613986629/blog/css-white-space/whitespace-6_r8unlg.png" style="height: 120px;"/></center>
+除了文本内部的换行符没有转成空格，其他都与normal的处理规则一致。这对于诗歌类型的文本很有用。
 
-<h3 id="3-3-使用font-size消除间距"><a href="#3-3-使用font-size消除间距" class="headerlink" title="3.3 使用font-size消除间距"></a>3.3 使用font-size消除间距</h3><p>将父元素的font-size设为0，这样空格就不会占位置，然后再对子元素单独设置font-size。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">"font-size: 0;"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span> <span class="attr">style</span>=<span class="string">"font-size: 20px;"</span>&gt;</span>hello<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span> <span class="attr">style</span>=<span class="string">"font-size: 20px;"</span>&gt;</span>world<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1613965693/blog/span%E9%97%B4%E9%9A%94/span%E9%97%B4%E8%B7%9D-6_hbloxj.png" style="height: 40px;" /></center>
-
-<h3 id="3-4-flex布局"><a href="#3-4-flex布局" class="headerlink" title="3.4 flex布局"></a>3.4 flex布局</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">"display: flex;"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>hello<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span>&gt;</span>world<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="3-5-浮动"><a href="#3-5-浮动" class="headerlink" title="3.5 浮动"></a>3.5 浮动</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span> <span class="attr">style</span>=<span class="string">"float: left;"</span>&gt;</span>hello<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">span</span> <span class="attr">style</span>=<span class="string">"float: left;"</span>&gt;</span>world<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>查询了很多博客，发现大家都还要添加一句display: iniline-block，其实是不必要的，因为设置浮动之后，display会自动转block，为不是inline。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://juejin.cn/post/6844904083648675853" target="_blank" rel="noopener">两个span标签的间距问题</a></p>
-<p><a href="https://www.zhangxinxu.com/wordpress/2012/04/inline-block-space-remove-%E5%8E%BB%E9%99%A4%E9%97%B4%E8%B7%9D/" target="_blank" rel="noopener">去除inline-block元素间间距的N种方法</a></p>
+<h2 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h2><table>
+<thead>
+<tr>
+<th>whith-space属性</th>
+<th>源码空格</th>
+<th>源码换行</th>
+<th>&lt;br&gt;换行</th>
+<th>容器边界换行</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>normal</td>
+<td>合并</td>
+<td>忽略</td>
+<td>换行</td>
+<td>换行</td>
+</tr>
+<tr>
+<td>nowrap</td>
+<td>合并</td>
+<td>忽略</td>
+<td>换行</td>
+<td>不换行</td>
+</tr>
+<tr>
+<td>pre</td>
+<td>保留</td>
+<td>换行</td>
+<td>换行</td>
+<td>不换行</td>
+</tr>
+<tr>
+<td>pre-wrap</td>
+<td>保留</td>
+<td>换行</td>
+<td>换行</td>
+<td>换行</td>
+</tr>
+<tr>
+<td>pre-line</td>
+<td>合并</td>
+<td>换行</td>
+<td>换行</td>
+<td>换行</td>
+</tr>
+</tbody></table>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://www.ruanyifeng.com/blog/2018/07/white-space.html" target="_blank" rel="noopener">CSS的空格处理</a><br><a href="https://blog.csdn.net/qq_33706382/article/details/78328188" target="_blank" rel="noopener">css white-space属性详解</a></p>
  
       <!-- reward -->
       <!-- 
@@ -195,7 +241,7 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2021/02/22/span%E9%97%B4%E8%B7%9D/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2021/02/22/css%E4%B8%AD%E7%9A%84white-space/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -208,19 +254,10 @@
    
   <nav class="article-nav">
     
-      <a href="/2021/02/22/css%E4%B8%AD%E7%9A%84white-space/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            css中的white-space
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/11/15/%E7%BB%84%E4%BB%B6%E9%97%B4%E7%9A%84%E9%80%9A%E4%BF%A1/" class="article-nav-link">
+      <a href="/2021/02/22/span%E9%97%B4%E8%B7%9D/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">组件间的通信</div>
+        <div class="article-nav-title">span间距</div>
       </a>
     
   </nav>
