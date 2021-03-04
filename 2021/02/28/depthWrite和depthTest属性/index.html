@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    css中的white-space |  Cherry Blog
+    depthWrite和depthTest属性 |  Cherry Blog
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -44,7 +44,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-css中的white-space"
+  id="post-depthWrite和depthTest属性"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -55,18 +55,18 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  css中的white-space
+  depthWrite和depthTest属性
 </h1>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2021/02/22/css%E4%B8%AD%E7%9A%84white-space/" class="article-date">
-  <time datetime="2021-02-22T07:47:56.000Z" itemprop="datePublished">2021-02-22</time>
+      <a href="/2021/02/28/depthWrite%E5%92%8CdepthTest%E5%B1%9E%E6%80%A7/" class="article-date">
+  <time datetime="2021-02-28T10:33:44.000Z" itemprop="datePublished">2021-02-28</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/css/">css</a>
+    <a class="article-category-link" href="/categories/three/">three</a>
   </div>
   
 <div class="word_count">
@@ -74,7 +74,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">873</span>
+            <span class="post-count">1.5k</span>
         </span>
     </span>
 
@@ -83,7 +83,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">3 min</span>
+            <span class="post-count">5 min</span>
         </span>
     </span>
 </div>
@@ -98,83 +98,51 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h2 id="1-写在前面"><a href="#1-写在前面" class="headerlink" title="1. 写在前面"></a>1. 写在前面</h2><p>在开发过程中遇到以下场景，div没有固定的宽，需要根据内容自适应，并且不换行，这种情况下，white-space就起了很大作用。</p>
-<h2 id="2-值"><a href="#2-值" class="headerlink" title="2. 值"></a>2. 值</h2><p>HTML语言的空格处理，就是将多个空格或回车直接合并成单个空格，这样的处理过于粗糙，忽视了原始文本内部的空格可能是有意义的。css提供了white-space属性，可以提供更精确多元的空格处理方式，该属性一共有六个值，normal | nowrap | pre | pre-wrap | pre-line | inherit，下面依次介绍。inherit为继承父元素的属性，在这里就不介绍了。</p>
-<h3 id="2-1-white-space-normal"><a href="#2-1-white-space-normal" class="headerlink" title="2.1 white-space: normal"></a>2.1 white-space: normal</h3><p>white-space属性的默认值是normal，表示浏览器以正常方式处理空格。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>^^hellohellohello^hello</span><br><span class="line">world</span><br><span class="line"><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>为了更明显的展示空格，在这里我们以<font style="color: orange"> ^ </font>代表空格，可以看到上述文本前面有两个空格，文本内部有一个长单词、一个空格和换行符。</p>
-<p>给容器<font style="color: orange">&lt;p&gt;</font>指定一个较小的宽度，添加一个橘色的背景色，方便识别。</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background</span>: orange;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1613985315/blog/css-white-space/whitespace-2_faj4km.png" style="height: 100px;"/></center>
-可以看到文首的空格被忽略，由于容器太窄，第一个单词溢出，然后在后面一个空格处换行，文本内部的换行符转成了空格。
+  <h2 id="1-写在前面"><a href="#1-写在前面" class="headerlink" title="1. 写在前面"></a>1. 写在前面</h2><p>在项目开发过程中，遇到如下情况：设计师提供的纹理背景是透明的，但是当多个纹理重叠的时候，还是会出现覆盖的情况，如下图所示。一开始使用depthTest属性没有解决，后来是通过将<font style="color: orange">depthWrite: false</font>实现的。具体原理在这里记录一下。<br><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614654092/blog/depthWrite%E5%92%8CdepthTest/dd-1_qsqz1n.png" style="width: 200px; height: 200px;"/><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614654092/blog/depthWrite%E5%92%8CdepthTest/dd-2_ig9pbz.png" style="width: 200px; height: 200px;margin-left: 20px;"/><br>如左图所示，当三条线重叠的时候发生了覆盖，覆盖区域只有最上方线条的纹理展示，而其他线均被遮挡，但正常的情况应该如右图所示。</p>
+<h2 id="2-原理"><a href="#2-原理" class="headerlink" title="2. 原理"></a>2. 原理</h2><p>在webgl中，深度会存储在depth buffer中，它和普通的颜色缓冲一样，只是存储的是深度值而已。深度值的精度一般有16位、24位和32位float，比较常用的深度精度为24位。</p>
+<h3 id="2-1-depthTest"><a href="#2-1-depthTest" class="headerlink" title="2.1 depthTest"></a>2.1 depthTest</h3><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614671654/blog/depthWrite%E5%92%8CdepthTest/dd-5_ayuwif.png" />
+<font style="color: orange">depthTest: 深度测试，默认值为true，可以设置为false来关闭深度测试。</font>在片元绘制过程中，会将像素的深度值与当前缓冲区中的值进行比较，如果大于等于深度缓冲区中值，则丢弃这部分不绘制，相当于在片元着色器中discard掉；否则利用这个像素对应的深度值和颜色值，分别更新深度缓冲区和颜色缓冲区。
 
-<h3 id="2-2-white-space-nowrap"><a href="#2-2-white-space-nowrap" class="headerlink" title="2.2 white-space: nowrap"></a>2.2 white-space: nowrap</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">white-space</span>: nowrap;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>当属性值为nowrap时，不会因为超出容器宽度而换行。</p>
-<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1613985590/blog/css-white-space/whitespace-3_fyqyxg.png" style="height: 60px;"/></center>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> geometry1 = <span class="keyword">new</span> THREE.BoxGeometry(<span class="number">20</span>, <span class="number">20</span>, <span class="number">20</span>)</span><br><span class="line"><span class="keyword">const</span> geometry2 = <span class="keyword">new</span> THREE.BoxGeometry(<span class="number">20</span>, <span class="number">20</span>, <span class="number">20</span>)</span><br><span class="line"><span class="keyword">const</span> material1 = <span class="keyword">new</span> THREE.MeshBasicMaterial(&#123;</span><br><span class="line">  color: <span class="string">'blue'</span>,</span><br><span class="line">  depthTest: <span class="literal">true</span></span><br><span class="line">  <span class="comment">// depthTest: false</span></span><br><span class="line">  <span class="comment">// depthWrite默认值为true</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">const</span> material2 = <span class="keyword">new</span> THREE.MeshBasicMaterial(&#123;</span><br><span class="line">  color: <span class="string">'yellow'</span>,</span><br><span class="line">  depthTest: <span class="literal">true</span></span><br><span class="line">  <span class="comment">// depthTest: false</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">const</span> mesh1 = <span class="keyword">new</span> THREE.Mesh(geometry1, material1)</span><br><span class="line"><span class="keyword">const</span> mesh2 = <span class="keyword">new</span> THREE.Mesh(geometry2, material2)</span><br><span class="line">mesh1.position.set(<span class="number">-100</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">mesh2.position.set(<span class="number">-90</span>, <span class="number">10</span>, <span class="number">-10</span>)</span><br><span class="line">scene.add(mesh1)</span><br><span class="line">scene.add(mesh2)</span><br></pre></td></tr></table></figure>
 
-<p><strong>拓展</strong>  </p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background</span>: orange;</span><br><span class="line">  <span class="attribute">white-space</span>: nowrap;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">  <span class="attribute">text-overflow</span>: ellipsis;</span><br><span class="line">&#125;</span><br><span class="line">``` </span><br><span class="line">&lt;font style="color: orange"&gt;white-space: nowrap;&lt;/font&gt;经常和&lt;font style="color: orange"&gt;overflow:hidden;&lt;/font&gt;、&lt;font style="color: orange"&gt;text-overflow: ellipsis;&lt;/font&gt;一起使用，来实现文本过长显示省略号的效果.</span><br><span class="line">&lt;center&gt;&lt;img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1613987553/blog/css-white-space/whitespace-7_fbrfrr.png" style="height: 50px;"/&gt;&lt;/center&gt;</span><br><span class="line"></span><br><span class="line">### 2<span class="selector-class">.3</span> <span class="selector-tag">white-space</span>: <span class="selector-tag">pre</span></span><br><span class="line">```<span class="selector-tag">css</span></span><br><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">white-space</span>: nowrap;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>当属性值为pre时，就按照&lt;pre&gt;标签的方式处理.</p>
-<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1613985802/blog/css-white-space/whitespace-4_nvzsxu.png" style="height: 80px;"/></center>
-效果和原始文本保持一致，文首的空格、内部的空格和换行符都保留了。
+<p>以如上代码为例，在scene场景中添加了两个box物体，先添加的是蓝色的，后添加的是黄色的，可以看下当material的depthTest属性分别为true和false的时候对应的结果。<br><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614665197/blog/depthWrite%E5%92%8CdepthTest/dd-4_ugjicu.png" style="width: 220px; height: 200px;"/><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614665151/blog/depthWrite%E5%92%8CdepthTest/dd-3_wz11bx.png" style="width: 220px; height: 200px;margin-left: 20px;"/><br><font style="color: orange;margin-left: 60px;">depthTest: true</font><font style="color: orange;margin-left: 140px;">depthTest: false</font></p>
+<p>以上面两张图片为例，默认开启深度写入<font style="color: orange;">depthWrite: true</font>.</p>
+<ul>
+<li><font style="color: orange;">depthTest: true</font>，开启深度检测。先绘制的是蓝色的box，此时depth buffer中没有值，所以蓝色box完整绘制，同时将蓝色box像素的深度值写入深度缓冲区(<font style="color: orange;">depthWrite控制是否写入深度缓冲区</font>)。因此在绘制黄色box时，会将像素点的深度值与深度缓冲区中已有的值进行比较，因为蓝色box的深度值已写入，所以黄色和蓝色重叠的部分就不会绘制，因此可以看出左图黄色box缺了一角。</li>
+<li><font style="color: orange;">depthTest: false</font>，关闭深度检测。因为关闭了depthTest，黄色和蓝色box均正常绘制，但是位置上发生了重叠，后来居上，所以黄色遮盖了蓝色。因此此时的缺失是由于<font style="color:orange;">位置重叠</font>导致的，而不是深度检测。</li>
+</ul>
+<h3 id="2-2-depthWrite"><a href="#2-2-depthWrite" class="headerlink" title="2.2 depthWrite"></a>2.2 depthWrite</h3><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614671655/blog/depthWrite%E5%92%8CdepthTest/dd-6_uqjped.png" />
+渲染材质时是否对深度缓冲区有任何影响，默认值为true。    
+在绘制2D叠加时，为了将多个在一起的事物分层而不创建z-index伪像，禁用深度写入会很有用。
 
-<h3 id="2-4-white-space-pre-wrap"><a href="#2-4-white-space-pre-wrap" class="headerlink" title="2.4 white-space: pre-wrap"></a>2.4 white-space: pre-wrap</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">white-space</span>: pre-wrap;</span><br></pre></td></tr></table></figure>
-<p>当属性值为pre-wrap时，基本还是按照&lt;pre&gt;标签的方式处理，不同的是超出容器宽度时会发生换行。</p>
-<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1613985990/blog/css-white-space/whitespace-5_lwfc7u.png" style="height: 150px;"/></center>
-文首的空格、内部的空格和换行符都保留了，超出容器的地方发生了换行。（注：可以发现多了一行空白行，这是因为文首是两个空格，接着展示<font style="color: orange">hellohellohello</font>这个长字符的时候，剩余的宽度展示不下，所以产生了换行；<font style="color: orange">hello</font>与<font style="color: orange">world</font>之前的换行时候代码中的换行符导致的。）
+<p><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614654092/blog/depthWrite%E5%92%8CdepthTest/dd-1_qsqz1n.png" style="width: 200px; height: 200px;"/><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614654092/blog/depthWrite%E5%92%8CdepthTest/dd-2_ig9pbz.png" style="width: 200px; height: 200px;margin-left: 20px;"/><br><font style="color: orange;margin-left: 60px;">depthWrite: true</font><font style="color: orange;margin-left: 110px;">depthWrite: false</font> </p>
+<p>以上面两张图片为例，默认开启深度检测<font style="color: orange;">depthTest: true</font>.</p>
+<p>当绘制第一条线时，正常与深度缓冲区里当值做比较，正确绘制出前后关系：</p>
+<ul>
+<li><font style="color: orange;">depthWrite: true</font>，开启深度写入。绘制第一条线时，将满足条件的像素点绘制出来，同时利用这个像素对应的深度值和颜色值，分别更新深度缓冲区和颜色缓冲区。因此，在绘制第二条线时，深度缓冲区里已经包含里第一条线的深度值，所以深度检测时会与第一条线做比较，因此会出现第一条线遮挡第二条线的情况；</li>
+<li><font style="color: orange;">depthWrite: false</font>，关闭深度写入。绘制第一条线时，将满足条件的像素点绘制出来，但<strong>不会</strong>利用这个像素对应但深度值和颜色值更新对应的缓冲区，即第一条线绘制结束后，深度缓冲区里并没有第一条线对应的深度值。因此，在绘制第二条线时，深度检测并不会检测与第一条线的深度关系，所以就不会出现第一条线遮盖第二条线的情况。</li>
+</ul>
+<h2 id="3-z-fighting的问题"><a href="#3-z-fighting的问题" class="headerlink" title="3. z-fighting的问题"></a>3. z-fighting的问题</h2><p>深度冲突又叫(z-fighting)是图形渲染中一个非常常见的现象。造成深度冲突的主要原因是两个三角面片十分靠近，在渲染的时候GPU很难分清到底哪个面在前，哪个面在后，从而形成闪烁的现象。</p>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614824299/blog/depthWrite%E5%92%8CdepthTest/dd-7_i12eku.png" style="width: 400px;height: 400px;"/></center>
 
-<h3 id="2-5-white-space-pre-line"><a href="#2-5-white-space-pre-line" class="headerlink" title="2.5 white-space: pre-line"></a>2.5 white-space: pre-line</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">p</span> &#123;</span><br><span class="line">  <span class="attribute">white-space</span>: pre-line;</span><br></pre></td></tr></table></figure>
-<p>当属性值为pre-line时，意为保留换行符，除了换行符会原样输出外，其他均与white-space: normal的规则保持一致。</p>
-<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1613986629/blog/css-white-space/whitespace-6_r8unlg.png" style="height: 120px;"/></center>
-除了文本内部的换行符没有转成空格，其他都与normal的处理规则一致。这对于诗歌类型的文本很有用。
-
-<h2 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h2><table>
-<thead>
-<tr>
-<th>whith-space属性</th>
-<th>源码空格</th>
-<th>源码换行</th>
-<th>&lt;br&gt;换行</th>
-<th>容器边界换行</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>normal</td>
-<td>合并</td>
-<td>忽略</td>
-<td>换行</td>
-<td>换行</td>
-</tr>
-<tr>
-<td>nowrap</td>
-<td>合并</td>
-<td>忽略</td>
-<td>换行</td>
-<td>不换行</td>
-</tr>
-<tr>
-<td>pre</td>
-<td>保留</td>
-<td>换行</td>
-<td>换行</td>
-<td>不换行</td>
-</tr>
-<tr>
-<td>pre-wrap</td>
-<td>保留</td>
-<td>换行</td>
-<td>换行</td>
-<td>换行</td>
-</tr>
-<tr>
-<td>pre-line</td>
-<td>合并</td>
-<td>换行</td>
-<td>换行</td>
-<td>换行</td>
-</tr>
-</tbody></table>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://www.ruanyifeng.com/blog/2018/07/white-space.html" target="_blank" rel="noopener">CSS的空格处理</a><br><a href="https://blog.csdn.net/qq_33706382/article/details/78328188" target="_blank" rel="noopener">css white-space属性详解</a></p>
+<p>下面介绍一下这种情况出现时的解决方法。</p>
+<ul>
+<li><strong>简单直接的把两个靠近的面挪开一些</strong></li>
+</ul>
+<p>将两个面挪开一些距离，让他们不那么靠近，这样就不会争抢渲染，从而避免闪烁。<br>缺点：比较局限，不是所有模型都能手动修改，且工作量大。</p>
+<ul>
+<li><strong>调整camera的near、far参数</strong></li>
+</ul>
+<p>原理是当我们把裁剪空间转到ndc(归一化)空间的时候，会归一化z值，z值的范围越大，就会导致归一化后的位置相对越靠近，就更加容易产生z-fighting的现象。</p>
+<ul>
+<li><strong>使用对数缓冲</strong></li>
+</ul>
+<p>在threejs的renderer中可以启用logarithmicDepthBuffer属性，开启对数深度缓冲。<br>缺点：会使early-z的测试失效，从而造成一定程度的性能浪费。</p>
+<ul>
+<li><strong>使用polygonoffset</strong></li>
+</ul>
+<p>在threejs中通过设置material的polygonoffset属性，原理是在渲染时，将模型的订单稍微向靠近或原理相机的方向做一定的偏移，从而使两个相互靠近的面错开。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://zhuanlan.zhihu.com/p/151649142" target="_blank" rel="noopener">threejs中深度与透明</a><br><a href="http://www.yanhuangxueyuan.com/doc/Three.js/MaterialDepthTest.html" target="_blank" rel="noopener">Three.js材质深度测试.depthTest</a><br><a href="https://www.coder.work/article/1040467" target="_blank" rel="noopener">javascript - Three.js-depthWrite与depthTest在3个点上获得透明的 Canvas 纹理贴图</a></p>
  
       <!-- reward -->
       <!-- 
@@ -241,7 +209,7 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2021/02/22/css%E4%B8%AD%E7%9A%84white-space/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2021/02/28/depthWrite%E5%92%8CdepthTest%E5%B1%9E%E6%80%A7/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -254,19 +222,10 @@
    
   <nav class="article-nav">
     
+    
       <a href="/2021/02/22/css%E7%9B%92%E6%A8%A1%E5%9E%8B/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            css盒模型
-          
-        </div>
-      </a>
-    
-    
-      <a href="/2021/02/22/span%E9%97%B4%E8%B7%9D/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">span间距</div>
+        <div class="article-nav-title">css盒模型</div>
       </a>
     
   </nav>
