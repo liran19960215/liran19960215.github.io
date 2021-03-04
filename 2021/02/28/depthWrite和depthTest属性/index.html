@@ -100,8 +100,8 @@
        
   <h2 id="1-写在前面"><a href="#1-写在前面" class="headerlink" title="1. 写在前面"></a>1. 写在前面</h2><p>在项目开发过程中，遇到如下情况：设计师提供的纹理背景是透明的，但是当多个纹理重叠的时候，还是会出现覆盖的情况，如下图所示。一开始使用depthTest属性没有解决，后来是通过将<font style="color: orange">depthWrite: false</font>实现的。具体原理在这里记录一下。   </p>
 <div style="display: flex; flex-direction: row;justify-content:center;">
- <img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614654092/blog/depthWrite%E5%92%8CdepthTest/dd-1_qsqz1n.png"  width="260" height="260" >
- <img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614654092/blog/depthWrite%E5%92%8CdepthTest/dd-2_ig9pbz.png" width="260" height="260" >
+ <img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614654092/blog/depthWrite%E5%92%8CdepthTest/dd-1_qsqz1n.png"  style="width:260px; height:260px;" />
+ <img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614654092/blog/depthWrite%E5%92%8CdepthTest/dd-2_ig9pbz.png" style="width:260px; height:260px;" />
 </div>
 
 <p>如左图所示，当三条线重叠的时候发生了覆盖，覆盖区域只有最上方线条的纹理展示，而其他线均被遮挡，但正常的情况应该如右图所示。</p>
@@ -113,8 +113,8 @@
 
 <p>以如上代码为例，在scene场景中添加了两个box物体，先添加的是蓝色的，后添加的是黄色的，可以看下当material的depthTest属性分别为true和false的时候对应的结果。</p>
 <div style="display: flex; flex-direction: row;justify-content:center;">
- <img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614665197/blog/depthWrite%E5%92%8CdepthTest/dd-4_ugjicu.png"  width="280" height="260" >
- <img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614665151/blog/depthWrite%E5%92%8CdepthTest/dd-3_wz11bx.png" width="260" height="260" >
+ <img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614665197/blog/depthWrite%E5%92%8CdepthTest/dd-4_ugjicu.png"  style="width:260px; height:260px;" />
+ <img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614665151/blog/depthWrite%E5%92%8CdepthTest/dd-3_wz11bx.png" style="width:260px; height:260px;" />
 </div>
 <div style="display: flex; flex-direction: row;justify-content:center;">
 <font style="color: orange;">depthTest: true</font>
@@ -131,8 +131,8 @@
 在绘制2D叠加时，为了将多个在一起的事物分层而不创建z-index伪像，禁用深度写入会很有用。
 
 <div style="display: flex; flex-direction: row;justify-content:center;">
- <img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614654092/blog/depthWrite%E5%92%8CdepthTest/dd-1_qsqz1n.png"  width="260" height="260" >
- <img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614654092/blog/depthWrite%E5%92%8CdepthTest/dd-2_ig9pbz.png" width="260" height="260" >
+ <img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614654092/blog/depthWrite%E5%92%8CdepthTest/dd-1_qsqz1n.png"  style="width:260px; height:260px;" />
+ <img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614654092/blog/depthWrite%E5%92%8CdepthTest/dd-2_ig9pbz.png" style="width:260px; height:260px;" />
 </div>
 
 <div style="display: flex; flex-direction: row;justify-content:center;">
