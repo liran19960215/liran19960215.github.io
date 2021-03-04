@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    css实现轮播效果 |  Cherry Blog
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-css实现轮播效果"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  css实现轮播效果
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/03/04/css%E5%AE%9E%E7%8E%B0%E8%BD%AE%E6%92%AD%E6%95%88%E6%9E%9C/" class="article-date">
+  <time datetime="2021-03-04T06:40:30.000Z" itemprop="datePublished">2021-03-04</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/css/">css</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">2.1k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">9 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="1-写在前面"><a href="#1-写在前面" class="headerlink" title="1. 写在前面"></a>1. 写在前面</h2><p>在开发过程中会遇到几张图片轮播或者是列表轮播的需求，如何实现几张图片无缝的顺滑轮播呢？可以通过帧动画实现，在这里记录一下解决方法。</p>
+<h2 id="2-图片轮播"><a href="#2-图片轮播" class="headerlink" title="2. 图片轮播"></a>2. 图片轮播</h2><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614840788/blog/css%E8%BD%AE%E6%92%AD/css%E8%BD%AE%E6%92%AD-1_u0xksr.png" />
+以横向轮播为例，轮播图片并排排列成一张很宽的图片，如图所示手机屏幕的宽度是固定的，因此隔一段时间就将图片向左平移一张图片的宽度(假设图片和手机屏幕同宽)，这样就在视觉上会有图片轮播的效果。
+
+<h3 id="2-1-图片水平排列"><a href="#2-1-图片水平排列" class="headerlink" title="2.1 图片水平排列"></a>2.1 图片水平排列</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"banner"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"banner-wrapper"</span>&gt;</span>    // 该div的大小是可见区域的大小</span><br><span class="line">    <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"banner-list"</span>&gt;</span>      // 这一层的区域大小是所有图片加起来的大小</span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"item"</span> <span class="attr">id</span>=<span class="string">"item1"</span>&gt;</span>1<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"item"</span> <span class="attr">id</span>=<span class="string">"item2"</span>&gt;</span>2<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"item"</span> <span class="attr">id</span>=<span class="string">"item3"</span>&gt;</span>3<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"item"</span> <span class="attr">id</span>=<span class="string">"item4"</span>&gt;</span>4<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.banner</span> &#123;</span><br><span class="line">	<span class="attribute">border</span>: <span class="number">4px</span> solid black;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">150px</span>;</span><br><span class="line">	<span class="attribute">box-sizing</span>: content-box;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.banner</span> <span class="selector-class">.banner-wrapper</span> &#123;</span><br><span class="line">	<span class="attribute">position</span>: relative;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">z-index</span>: -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.banner-list</span> &#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">1200px</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">position</span>: absolute;</span><br><span class="line">	<span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">	<span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">	<span class="attribute">padding</span>: <span class="number">0</span>;</span><br><span class="line">	<span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">	<span class="attribute">list-style</span>: none;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.banner-list</span> <span class="selector-class">.item</span> &#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">display</span>: inline-block;</span><br><span class="line">	<span class="attribute">float</span>: left;</span><br><span class="line">	<span class="attribute">font-weight</span>: bold;</span><br><span class="line">	<span class="attribute">font-size</span>: <span class="number">40px</span>;</span><br><span class="line">	<span class="attribute">line-height</span>: <span class="number">150px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.banner-list</span> <span class="selector-class">.item</span><span class="selector-id">#item1</span>&#123;</span><br><span class="line">	<span class="attribute">background</span>: <span class="number">#9370DB</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.banner-list</span> <span class="selector-class">.item</span><span class="selector-id">#item2</span> &#123;</span><br><span class="line">	<span class="attribute">background</span>: <span class="number">#7B68EE</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.banner-list</span> <span class="selector-class">.item</span><span class="selector-id">#item3</span> &#123;</span><br><span class="line">	<span class="attribute">background</span>: <span class="number">#6A5ACD</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.banner-list</span> <span class="selector-class">.item</span><span class="selector-id">#item4</span> &#123;</span><br><span class="line">	<span class="attribute">background</span>: <span class="number">#483D8B</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614842824/blog/css%E8%BD%AE%E6%92%AD/css%E8%BD%AE%E6%92%AD-2_tqmxao.png" />
+
+<p>图中黑色边框的部分代表屏幕显示的区域，超出部分手机屏幕不可见。   </p>
+<ul>
+<li>html代码：水平排列了需要轮播的图片；   </li>
+<li>css代码： 用left和right属性操作图片左右轮播，所以要把轮播列表的<font style="color: orange">position</font>设置成为<font style="color: orange">absolute</font>，相应的父节点设置为<font style="color: orange">relative</font>，即轮播列表相对于父节点是绝对位置。水平排列，要设置float属性，将<font style="color: orange">float: left</font>设置到每个轮播项中，代表排列的时候左对齐。</li>
+</ul>
+<h3 id="2-2-隐藏屏幕可见范围外的区域"><a href="#2-2-隐藏屏幕可见范围外的区域" class="headerlink" title="2.2 隐藏屏幕可见范围外的区域"></a>2.2 隐藏屏幕可见范围外的区域</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">banner</span> <span class="selector-class">.banner-wrapper</span> &#123;</span><br><span class="line">	<span class="attribute">position</span>: relative;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">	<span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>wrapper代表的是屏幕范围，通过设置<font style="color: orange">overflow: hidden</font>来隐藏超出的内容</p>
+<h3 id="2-3-动画"><a href="#2-3-动画" class="headerlink" title="2.3 动画"></a>2.3 动画</h3><p>轮播动画利用帧动画<font style="color: orange">keyframes</font>实现。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@keyframes</span> banner-swipe &#123;</span><br><span class="line">  0% &#123; <span class="attribute">left</span>: <span class="number">0</span>; &#125;</span><br><span class="line">  33<span class="selector-class">.33</span>% &#123; <span class="attribute">left</span>: -<span class="number">300px</span>; &#125;</span><br><span class="line">  66<span class="selector-class">.66</span>% &#123; <span class="attribute">left</span>: -<span class="number">600px</span>; &#125;</span><br><span class="line">  100% &#123; <span class="attribute">left</span>: -<span class="number">900px</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.banner-list</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">1500px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">list-style</span>: none;</span><br><span class="line">  <span class="attribute">animation</span>: banner-swipe <span class="number">10s</span> ease-in infinite;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上述代码所示，定义了一个帧动画。因为只有四张图片，所以只要滚动三次就能轮播一遍，因此每次滚动占用的时间约为33.33%, 滚动的变化量为一张图片的宽度。(注：假设有n张图片，则须滚动<font style="color: orange">n-1</font>次，每次占用的时间为<font style="color: orange">1/(n-1)</font>)接着我们在banner-list中绑定帧动画<font style="color: orange">banner-swipe</font>，规定完成一次动画需要10s，<font style="color: orange">infinite</font>代表无限循环。</p>
+<center><video src="https://res.cloudinary.com/dg7gqrbda/video/upload/v1614849570/blog/css%E8%BD%AE%E6%92%AD/css%E8%BD%AE%E6%92%AD-3_b5c45a.mp4" autoplay ></center>
+
+<p>现在我们已经实现轮播效果了，但是很明显存在个问题，就是一次动画执行完成后，第一张图片会立马出现，而不是从第四张到第一张慢慢展现。</p>
+<h4 id="2-3-1-动画稳定过渡"><a href="#2-3-1-动画稳定过渡" class="headerlink" title="2.3.1 动画稳定过渡"></a>2.3.1 动画稳定过渡</h4><p>我们把隐藏部分的动画也展示出来。</p>
+<center><video src="https://res.cloudinary.com/dg7gqrbda/video/upload/v1614849903/blog/css%E8%BD%AE%E6%92%AD/css%E8%BD%AE%E6%92%AD-4_s2ul2p.mp4" autoplay ></center>
+
+<p>完整的动画可以很明显看出，4之后立马跳到了1，导致了突然的过渡。<strong>解决办法</strong>是在第四张图片后面再加张第一张图片，同时帧动画里再插入一帧。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"banner"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"banner-wrapper"</span>&gt;</span>   </span><br><span class="line">    <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"banner-list"</span>&gt;</span>      </span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"item"</span> <span class="attr">id</span>=<span class="string">"item1"</span>&gt;</span>1<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"item"</span> <span class="attr">id</span>=<span class="string">"item2"</span>&gt;</span>2<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"item"</span> <span class="attr">id</span>=<span class="string">"item3"</span>&gt;</span>3<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"item"</span> <span class="attr">id</span>=<span class="string">"item4"</span>&gt;</span>4<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span> <span class="attr">class</span>=<span class="string">"item"</span> <span class="attr">id</span>=<span class="string">"item4"</span>&gt;</span>1<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@keyframes</span> banner-swipe &#123;</span><br><span class="line">  0% &#123; <span class="attribute">left</span>: <span class="number">0</span>; &#125;</span><br><span class="line">  25% &#123; <span class="attribute">left</span>: -<span class="number">300px</span>; &#125;</span><br><span class="line">  50% &#123; <span class="attribute">left</span>: -<span class="number">600px</span>; &#125;</span><br><span class="line">  75% &#123; <span class="attribute">left</span>: -<span class="number">900px</span>; &#125;</span><br><span class="line">  100% &#123; <span class="attribute">left</span>: -<span class="number">1200px</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<center><video src="https://res.cloudinary.com/dg7gqrbda/video/upload/v1614850525/blog/css%E8%BD%AE%E6%92%AD/css%E8%BD%AE%E6%92%AD-5_dqp7z6.mp4" autoplay style="height: 150px;"></center>
+
+<center><video src="https://res.cloudinary.com/dg7gqrbda/video/upload/v1614850704/blog/css%E8%BD%AE%E6%92%AD/css%E8%BD%AE%E6%92%AD-6_obez9o.mp4" autoplay ></center>
+
+<p>从动画中可以看出，通过上述操作，保证了滚动的连续性。</p>
+<h4 id="2-3-2-动画停顿"><a href="#2-3-2-动画停顿" class="headerlink" title="2.3.2 动画停顿"></a>2.3.2 动画停顿</h4><p>上述图片轮播是持续不断的，即没有停顿。假设我们希望图片每次轮播之后停顿一段时间再轮播到下张图片，该如何实现呢？</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@keyframes</span> banner-swipe &#123;</span><br><span class="line">  0%, 10% &#123; <span class="attribute">left</span>: <span class="number">0</span>; &#125;</span><br><span class="line">  20%, 30% &#123; <span class="attribute">left</span>: -<span class="number">300px</span>; &#125;</span><br><span class="line">  40%, 50% &#123; <span class="attribute">left</span>: -<span class="number">600px</span>; &#125;</span><br><span class="line">  60%, 70% &#123; <span class="attribute">left</span>: -<span class="number">900px</span>; &#125;</span><br><span class="line">  80%, 100% &#123; <span class="attribute">left</span>: -<span class="number">1200px</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<center><video src="https://res.cloudinary.com/dg7gqrbda/video/upload/v1614852362/blog/css%E8%BD%AE%E6%92%AD/css%E8%BD%AE%E6%92%AD-8_sq6et6.mp4" autoplay style="height: 150px;"></center>
+
+<center><video src="https://res.cloudinary.com/dg7gqrbda/video/upload/v1614852362/blog/css%E8%BD%AE%E6%92%AD/css%E8%BD%AE%E6%92%AD-7_azucdr.mp4" autoplay ></center>
+
+<p>我们可以按照上面的代码修改帧动画即可。下面解读一下帧动画代码的内容：</p>
+<ul>
+<li><p>0% ～ 10%：停留在第一张图片；</p>
+</li>
+<li><p>20% ～ 30%：停留在第二张图片；      </p>
+</li>
+<li><p>40% ～ 50%：停留在第三张图片；      </p>
+</li>
+<li><p>60% ～ 70%：停留在第四张图片；      </p>
+</li>
+<li><p>80% ～ 100%: 停留在第一张图片；</p>
+</li>
+<li><p>10% ～ 20%：从第一张图片到第二张图片过渡；</p>
+</li>
+<li><p>30% ～ 40%：从第二张图片到第三张图片过渡；</p>
+</li>
+<li><p>50% ～ 60%：从第三张图片到第四张图片过渡；</p>
+</li>
+<li><p>70% ～ 80%：从第四章图片到第一张图片过渡；</p>
+</li>
+</ul>
+<p>注：上述keyframes动画在每张图片上停留的时间并不一致，这里我只是大概写一个demo，可以通过计算让每张图片停留时间以及过渡时间保持一致。</p>
+<h2 id="3-列表轮播"><a href="#3-列表轮播" class="headerlink" title="3. 列表轮播"></a>3. 列表轮播</h2><h3 id="3-1-实现"><a href="#3-1-实现" class="headerlink" title="3.1 实现"></a>3.1 实现</h3><p>原理和图片轮播是一致的，在这里就当作是个练习写一下。</p>
+<div style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
+<div>
+<video src="https://res.cloudinary.com/dg7gqrbda/video/upload/v1614856038/blog/css%E8%BD%AE%E6%92%AD/css%E8%BD%AE%E6%92%AD-9_rxqowl.mp4" autoplay>
+</div>
+<div>
+<video src="https://res.cloudinary.com/dg7gqrbda/video/upload/v1614856039/blog/css%E8%BD%AE%E6%92%AD/css%E8%BD%AE%E6%92%AD-10_pb1bsn.mp4" autoplay>
+</div>
+</div>
+
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"banner-wrapper"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"banner-list"</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">div</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">div</span>&gt;</span>2<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">div</span>&gt;</span>3<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">div</span>&gt;</span>4<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@keyframes</span> banner-swipe &#123;</span><br><span class="line">  0% &#123; <span class="attribute">top</span>: <span class="number">0</span>; &#125;</span><br><span class="line">  33<span class="selector-class">.33</span>% &#123; <span class="attribute">top</span>: -<span class="number">50px</span>; &#125;</span><br><span class="line">  66<span class="selector-class">.66</span>% &#123; <span class="attribute">top</span>: -<span class="number">100px</span>; &#125;</span><br><span class="line">  100% &#123; <span class="attribute">top</span>: -<span class="number">150px</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.banner-wrapper</span> &#123;</span><br><span class="line">	<span class="attribute">position</span>: relative;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">50px</span>;</span><br><span class="line">	<span class="attribute">z-index</span>: -<span class="number">1</span>;</span><br><span class="line">  <span class="attribute">overflow</span>: hidden;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.banner-list</span> &#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">200px</span>;</span><br><span class="line">	<span class="attribute">position</span>: absolute;</span><br><span class="line">	<span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line">	<span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">	<span class="attribute">padding</span>: <span class="number">0</span>;</span><br><span class="line">	<span class="attribute">margin</span>: <span class="number">0</span>;</span><br><span class="line">	<span class="attribute">list-style</span>: none;</span><br><span class="line">	<span class="attribute">animation</span>: banner-swipe <span class="number">10s</span> ease-in infinite;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.banner-list</span> <span class="selector-tag">div</span> &#123;</span><br><span class="line">	<span class="attribute">width</span>: <span class="number">300px</span>;</span><br><span class="line">	<span class="attribute">height</span>: <span class="number">50px</span>;</span><br><span class="line">	<span class="attribute">font-weight</span>: bold;</span><br><span class="line">	<span class="attribute">font-size</span>: <span class="number">40px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.banner-list</span> <span class="selector-tag">div</span><span class="selector-pseudo">:nth-child(1)</span>&#123;</span><br><span class="line">	<span class="attribute">background</span>: <span class="number">#9370DB</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.banner-list</span> <span class="selector-tag">div</span><span class="selector-pseudo">:nth-child(2)</span> &#123;</span><br><span class="line">	<span class="attribute">background</span>: <span class="number">#7B68EE</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.banner-list</span> <span class="selector-tag">div</span><span class="selector-pseudo">:nth-child(3)</span> &#123;</span><br><span class="line">	<span class="attribute">background</span>: <span class="number">#6A5ACD</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.banner-list</span> <span class="selector-tag">div</span><span class="selector-pseudo">:nth-child(4)</span> &#123;</span><br><span class="line">	<span class="attribute">background</span>: <span class="number">#483D8B</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-解决突现问题"><a href="#3-2-解决突现问题" class="headerlink" title="3.2 解决突现问题"></a>3.2 解决突现问题</h3><center><video src="https://res.cloudinary.com/dg7gqrbda/video/upload/v1614856621/blog/css%E8%BD%AE%E6%92%AD/css%E8%BD%AE%E6%92%AD-11_jz6lmd.mp4" autoplay></center>
+
+<p>原理同上：在4后面增加一个1，同时帧动画多增加一帧。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"banner-wrapper"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"banner-list"</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">div</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">div</span>&gt;</span>2<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">div</span>&gt;</span>3<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">div</span>&gt;</span>4<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">div</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">@keyframes</span> banner-swipe &#123;</span><br><span class="line">  0% &#123; <span class="attribute">top</span>: <span class="number">0</span>; &#125;</span><br><span class="line">  25% &#123; <span class="attribute">top</span>: -<span class="number">50px</span>; &#125;</span><br><span class="line">  50% &#123; <span class="attribute">top</span>: -<span class="number">100px</span>; &#125;</span><br><span class="line">  75% &#123; <span class="attribute">top</span>: -<span class="number">150px</span>; &#125;</span><br><span class="line">  100% &#123; <span class="attribute">top</span>: -<span class="number">200px</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-可视范围更改"><a href="#3-3-可视范围更改" class="headerlink" title="3.3 可视范围更改"></a>3.3 可视范围更改</h3><center><video src="https://res.cloudinary.com/dg7gqrbda/video/upload/v1614856993/blog/css%E8%BD%AE%E6%92%AD/css%E8%BD%AE%E6%92%AD-12_gmykfa.mp4" autoplay></center>
+
+<p>假设我们现在向调整可视窗口，让一个窗口一次性展示两条数据，应该修改哪些内容呢？</p>
+<ul>
+<li>首先调整可视窗口大小，以两个为例，则高度放大为原来的两倍；</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">.banner-wrapper &#123;</span><br><span class="line">	position: relative;</span><br><span class="line">	width: <span class="number">300</span>px;</span><br><span class="line">	<span class="comment">// height: 50px;</span></span><br><span class="line">  height: <span class="number">100</span>px;</span><br><span class="line">	z-index: <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>html部分增加1、2两条数据。之前为了解决4到1的突然转变，在4后增加了1，现在是两条数据为一个整体，所以对应的要解决3、4到1、2的突变，所以要在4后边增加1、2.</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"banner-wrapper"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"banner-list"</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">div</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">div</span>&gt;</span>2<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">div</span>&gt;</span>3<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">div</span>&gt;</span>4<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">div</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">div</span>&gt;</span>2<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>调整banner-list的高度。每条数据高50px，之前是4条数据，现在是6条数据，所以要增高100px。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">.banner-list &#123;</span><br><span class="line">	width: <span class="number">300</span>px;</span><br><span class="line">	<span class="comment">// height: 200px;</span></span><br><span class="line">  height: <span class="number">300</span>px;</span><br><span class="line">	position: absolute;</span><br><span class="line">	left: <span class="number">0</span>;</span><br><span class="line">	top: <span class="number">0</span>;</span><br><span class="line">	padding: <span class="number">0</span>;</span><br><span class="line">	margin: <span class="number">0</span>;</span><br><span class="line">	list-style: none;</span><br><span class="line">	animation: banner-swipe <span class="number">10</span>s ease-<span class="keyword">in</span> infinite;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>调整keyframes。之前每次展示一条，共四条数据，需要滚动三次完成，现在每次展示两条，滚动一次即可，每次滚动的偏移量也会发生改变。(原理详见<font style="color: orange">2.3 动画</font>)</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 一条数据轮播</span></span><br><span class="line">@keyframes banner-swipe &#123;</span><br><span class="line">  <span class="number">0</span>% &#123; <span class="attr">top</span>: <span class="number">0</span>; &#125;</span><br><span class="line">  <span class="number">33.33</span>% &#123; <span class="attr">top</span>: <span class="number">-50</span>px; &#125;</span><br><span class="line">  <span class="number">66.66</span>% &#123; <span class="attr">top</span>: <span class="number">-100</span>px; &#125;</span><br><span class="line">  <span class="number">100</span>% &#123; <span class="attr">top</span>: <span class="number">-150</span>px; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 两条数据轮播</span></span><br><span class="line">@keyframes banner-swipe &#123;</span><br><span class="line">  <span class="number">0</span>% &#123; <span class="attr">top</span>: <span class="number">0</span>; &#125;</span><br><span class="line">  <span class="number">50</span>% &#123; <span class="attr">top</span>: <span class="number">-100</span>px; &#125;</span><br><span class="line">  <span class="number">100</span>% &#123; <span class="attr">top</span>: <span class="number">-200</span>px; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://xydida.com/2020/5/17/frontend/design-a-swiper-by-CSS/" target="_blank" rel="noopener">纯CSS实现轮播图</a></p>
+ 
+      <!-- reward -->
+      <!-- 
+      <div id="reward-btn">
+        Belohnung
+      </div>
+       -->
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <!-- <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright-Hinweis： </strong>
+          Sofern nicht anders angegeben, liegt das Urheberrecht aller Artikel in diesem Blog beim Autor. Nachdruck bitte Quelle angeben!
+        </li>
+      </ul> -->
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2021/03/04/css%E5%AE%9E%E7%8E%B0%E8%BD%AE%E6%92%AD%E6%95%88%E6%9E%9C/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/study/" rel="tag">study</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2021/02/28/depthWrite%E5%92%8CdepthTest%E5%B1%9E%E6%80%A7/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">depthWrite和depthTest属性</div>
+      </a>
+    
+  </nav>
+
+    
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2021
+        <i class="ri-heart-fill heart_icon"></i> John Doe
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Cherry Blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="http://shenyu-vip.lofter.com" target="_blank" rel="noopener">摄影</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/introduction">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>
