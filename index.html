@@ -131,14 +131,29 @@
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h2 id="1-写在前面"><a href="#1-写在前面" class="headerlink" title="1. 写在前面"></a>1. 写在前面</h2><p>在项目开发过程中，遇到如下情况：设计师提供的纹理背景是透明的，但是当多个纹理重叠的时候，还是会出现覆盖的情况，如下图所示。一开始使用depthTest属性没有解决，后来是通过将<font style="color: orange">depthWrite: false</font>实现的。具体原理在这里记录一下。<br><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614654092/blog/depthWrite%E5%92%8CdepthTest/dd-1_qsqz1n.png" style="width: 200px; height: 200px;"/><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614654092/blog/depthWrite%E5%92%8CdepthTest/dd-2_ig9pbz.png" style="width: 200px; height: 200px;margin-left: 20px;"/><br>如左图所示，当三条线重叠的时候发生了覆盖，覆盖区域只有最上方线条的纹理展示，而其他线均被遮挡，但正常的情况应该如右图所示。</p>
+  <h2 id="1-写在前面"><a href="#1-写在前面" class="headerlink" title="1. 写在前面"></a>1. 写在前面</h2><p>在项目开发过程中，遇到如下情况：设计师提供的纹理背景是透明的，但是当多个纹理重叠的时候，还是会出现覆盖的情况，如下图所示。一开始使用depthTest属性没有解决，后来是通过将<font style="color: orange">depthWrite: false</font>实现的。具体原理在这里记录一下。   </p>
+<div style="display: flex; flex-direction: row;justify-content:center;">
+ <img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614654092/blog/depthWrite%E5%92%8CdepthTest/dd-1_qsqz1n.png"  width="260" height="260" >
+ <img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614654092/blog/depthWrite%E5%92%8CdepthTest/dd-2_ig9pbz.png" width="260" height="260" >
+</div>
+
+<p>如左图所示，当三条线重叠的时候发生了覆盖，覆盖区域只有最上方线条的纹理展示，而其他线均被遮挡，但正常的情况应该如右图所示。</p>
 <h2 id="2-原理"><a href="#2-原理" class="headerlink" title="2. 原理"></a>2. 原理</h2><p>在webgl中，深度会存储在depth buffer中，它和普通的颜色缓冲一样，只是存储的是深度值而已。深度值的精度一般有16位、24位和32位float，比较常用的深度精度为24位。</p>
 <h3 id="2-1-depthTest"><a href="#2-1-depthTest" class="headerlink" title="2.1 depthTest"></a>2.1 depthTest</h3><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614671654/blog/depthWrite%E5%92%8CdepthTest/dd-5_ayuwif.png" />
 <font style="color: orange">depthTest: 深度测试，默认值为true，可以设置为false来关闭深度测试。</font>在片元绘制过程中，会将像素的深度值与当前缓冲区中的值进行比较，如果大于等于深度缓冲区中值，则丢弃这部分不绘制，相当于在片元着色器中discard掉；否则利用这个像素对应的深度值和颜色值，分别更新深度缓冲区和颜色缓冲区。
 
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> geometry1 = <span class="keyword">new</span> THREE.BoxGeometry(<span class="number">20</span>, <span class="number">20</span>, <span class="number">20</span>)</span><br><span class="line"><span class="keyword">const</span> geometry2 = <span class="keyword">new</span> THREE.BoxGeometry(<span class="number">20</span>, <span class="number">20</span>, <span class="number">20</span>)</span><br><span class="line"><span class="keyword">const</span> material1 = <span class="keyword">new</span> THREE.MeshBasicMaterial(&#123;</span><br><span class="line">  color: <span class="string">'blue'</span>,</span><br><span class="line">  depthTest: <span class="literal">true</span></span><br><span class="line">  <span class="comment">// depthTest: false</span></span><br><span class="line">  <span class="comment">// depthWrite默认值为true</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">const</span> material2 = <span class="keyword">new</span> THREE.MeshBasicMaterial(&#123;</span><br><span class="line">  color: <span class="string">'yellow'</span>,</span><br><span class="line">  depthTest: <span class="literal">true</span></span><br><span class="line">  <span class="comment">// depthTest: false</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">const</span> mesh1 = <span class="keyword">new</span> THREE.Mesh(geometry1, material1)</span><br><span class="line"><span class="keyword">const</span> mesh2 = <span class="keyword">new</span> THREE.Mesh(geometry2, material2)</span><br><span class="line">mesh1.position.set(<span class="number">-100</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">mesh2.position.set(<span class="number">-90</span>, <span class="number">10</span>, <span class="number">-10</span>)</span><br><span class="line">scene.add(mesh1)</span><br><span class="line">scene.add(mesh2)</span><br></pre></td></tr></table></figure>
 
-<p>以如上代码为例，在scene场景中添加了两个box物体，先添加的是蓝色的，后添加的是黄色的，可以看下当material的depthTest属性分别为true和false的时候对应的结果。<br><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614665197/blog/depthWrite%E5%92%8CdepthTest/dd-4_ugjicu.png" style="width: 220px; height: 200px;"/><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614665151/blog/depthWrite%E5%92%8CdepthTest/dd-3_wz11bx.png" style="width: 220px; height: 200px;margin-left: 20px;"/><br><font style="color: orange;margin-left: 60px;">depthTest: true</font><font style="color: orange;margin-left: 140px;">depthTest: false</font></p>
+<p>以如上代码为例，在scene场景中添加了两个box物体，先添加的是蓝色的，后添加的是黄色的，可以看下当material的depthTest属性分别为true和false的时候对应的结果。</p>
+<div style="display: flex; flex-direction: row;justify-content:center;">
+ <img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614665197/blog/depthWrite%E5%92%8CdepthTest/dd-4_ugjicu.png"  width="280" height="260" >
+ <img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614665151/blog/depthWrite%E5%92%8CdepthTest/dd-3_wz11bx.png" width="260" height="260" >
+</div>
+<div style="display: flex; flex-direction: row;justify-content:center;">
+<font style="color: orange;">depthTest: true</font>
+<font style="color: orange;margin-left: 140px;">depthTest: false</font>
+</div>
+
 <p>以上面两张图片为例，默认开启深度写入<font style="color: orange;">depthWrite: true</font>.</p>
 <ul>
 <li><font style="color: orange;">depthTest: true</font>，开启深度检测。先绘制的是蓝色的box，此时depth buffer中没有值，所以蓝色box完整绘制，同时将蓝色box像素的深度值写入深度缓冲区(<font style="color: orange;">depthWrite控制是否写入深度缓冲区</font>)。因此在绘制黄色box时，会将像素点的深度值与深度缓冲区中已有的值进行比较，因为蓝色box的深度值已写入，所以黄色和蓝色重叠的部分就不会绘制，因此可以看出左图黄色box缺了一角。</li>
@@ -148,7 +163,16 @@
 渲染材质时是否对深度缓冲区有任何影响，默认值为true。    
 在绘制2D叠加时，为了将多个在一起的事物分层而不创建z-index伪像，禁用深度写入会很有用。
 
-<p><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614654092/blog/depthWrite%E5%92%8CdepthTest/dd-1_qsqz1n.png" style="width: 200px; height: 200px;"/><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614654092/blog/depthWrite%E5%92%8CdepthTest/dd-2_ig9pbz.png" style="width: 200px; height: 200px;margin-left: 20px;"/><br><font style="color: orange;margin-left: 60px;">depthWrite: true</font><font style="color: orange;margin-left: 110px;">depthWrite: false</font> </p>
+<div style="display: flex; flex-direction: row;justify-content:center;">
+ <img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614654092/blog/depthWrite%E5%92%8CdepthTest/dd-1_qsqz1n.png"  width="260" height="260" >
+ <img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1614654092/blog/depthWrite%E5%92%8CdepthTest/dd-2_ig9pbz.png" width="260" height="260" >
+</div>
+
+<div style="display: flex; flex-direction: row;justify-content:center;">
+<font style="color: orange;">depthWrite: true</font>
+<font style="color: orange;margin-left: 160px;">depthWrite: false</font>
+</div> 
+
 <p>以上面两张图片为例，默认开启深度检测<font style="color: orange;">depthTest: true</font>.</p>
 <p>当绘制第一条线时，正常与深度缓冲区里当值做比较，正确绘制出前后关系：</p>
 <ul>
