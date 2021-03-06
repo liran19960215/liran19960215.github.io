@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    three meshLine性能问题 |  Cherry Blog
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="three-meshLine性能问题"
+  class="article article-type-three"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  three meshLine性能问题
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/03/05/meshLine%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98/" class="article-date">
+  <time datetime="2021-03-05T02:15:13.000Z" itemprop="datePublished">2021-03-05</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/three/">three</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">3.5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">15 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="1-写在前面"><a href="#1-写在前面" class="headerlink" title="1. 写在前面"></a>1. 写在前面</h2><p>在项目开发过程中需要实现飞线的功能，这本身是不难实现的，难的是飞线：</p>
+<ul>
+<li>有一定的宽度，不是1px；</li>
+<li>有自己的纹理，不是纯色；</li>
+<li>顶点随时发生改变，因为一直在飞。</li>
+</ul>
+<p>我能遇到的问题，肯定有人也遇到过，况且飞线这个是可视化中经常遇到的元素，使用场景非常多。因此我在网上找到了别人封装好的飞线组件<a href="https://github.com/spite/THREE.MeshLine" target="_blank" rel="noopener">THREE MeshLine</a>(注：这不是MrDoob写的three里面包含的组件，是网友后面基于three现有的功能封装的)，该组件被广泛使用且功能强大，能满足基本所有飞线的功能。所以我也应用到了项目中，但是在最终测试的阶段，却发现了页面卡顿的现象，最后定位到了<font style="color: orange;">THREE MeshLine</font>身上。下面就具体来记录一下问题。</p>
+<h2 id="2-THREE-MeshLine源码解读"><a href="#2-THREE-MeshLine源码解读" class="headerlink" title="2. THREE MeshLine源码解读"></a>2. THREE MeshLine源码解读</h2><h3 id="2-1-使用方法"><a href="#2-1-使用方法" class="headerlink" title="2.1 使用方法"></a>2.1 使用方法</h3><ul>
+<li>install<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i three.meshline</span><br></pre></td></tr></table></figure></li>
+<li>import<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; MeshLine, MeshLineMaterial &#125; <span class="keyword">from</span> <span class="string">'three.meshline'</span>;</span><br></pre></td></tr></table></figure></li>
+<li>use<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// geometry</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> line = <span class="keyword">new</span> MeshLine();</span><br><span class="line"><span class="comment">// 写入点坐标</span></span><br><span class="line">line.setPoints(points);</span><br><span class="line"><span class="comment">// 非均匀宽度的设置方法</span></span><br><span class="line"><span class="comment">// p is a decimal percentage of the number of points</span></span><br><span class="line"><span class="comment">// ie. point 200 of 250 points, p = 0.8</span></span><br><span class="line">line.setPoints(geometry, p =&gt; <span class="number">2</span>); <span class="comment">// 2倍宽度</span></span><br><span class="line">line.setPoints(geometry, p =&gt; <span class="number">1</span> - p); <span class="comment">// 宽度随p递增而线性递减</span></span><br><span class="line">line.setPoints(geometry, p =&gt; <span class="number">2</span> + <span class="built_in">Math</span>.sin(<span class="number">50</span> * p)); <span class="comment">// kuandu 随p正弦变化，变化范围[1, 3]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// material</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> material = <span class="keyword">new</span> MeshLineMaterial(options);</span><br><span class="line"><span class="comment">// options的可配置项</span></span><br><span class="line">options = &#123;</span><br><span class="line">  map: 自定义纹理，若开启useMap, 则片元着色器中就回去取map的像素值</span><br><span class="line">  useMap: 是否启用自定义纹理</span><br><span class="line">  alphaMap: 透明度纹理，使用时需开启useMap</span><br><span class="line">  useAlphaMap: 是否启用透明度纹理</span><br><span class="line">  repeat: 纹理的重复方式，通过二维向量定义map和alphaMap在水平和垂直方向上的重叠方式</span><br><span class="line">  color: 线的颜色</span><br><span class="line">  opacity: 线的透明度，需要设置transparent: <span class="literal">true</span></span><br><span class="line">  alphaTest: 透明度检测</span><br><span class="line">  dashArray: 设置虚线的长度和间隔，<span class="number">0</span>代表连续不间断的线</span><br><span class="line">  dashOffset: 虚线的偏移，定义虚线从哪里开始，此属性常用来实现动线</span><br><span class="line">  dashRatio: 定义可见比例，<span class="number">0</span>代表全部可见，<span class="number">1</span>代表全部不可见</span><br><span class="line">  resolution: 通过二维向量来定义canvas的尺寸</span><br><span class="line">  sizeAttenuation: 定义线宽是否随距离衰减，<span class="number">0</span>代表衰减，<span class="number">1</span>代表为常数不衰减</span><br><span class="line">  lineWidth: 线宽，浮点数</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// mesh</span></span><br><span class="line"><span class="keyword">const</span> mesh = <span class="keyword">new</span> THREE.Mesh(line, material);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="2-2-性能问题"><a href="#2-2-性能问题" class="headerlink" title="2.2 性能问题"></a>2.2 性能问题</h3><p>其实meshline到现在经过那么多开发者的使用，本身不存在性能问题，如果存在，早就被开发者提issue解决了，那么为什么笔者在使用的过程中会遇到性能问题呢？</p>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1615024047/blog/meshline%E6%80%A7%E8%83%BD/meshline%E6%80%A7%E8%83%BD_ajkgmw.png" /></center>
+
+<p>根据2.1节中meshMaterial相关配置的介绍，假设现在以上图由红到蓝的渐变色作为map映射到飞线上，只需要设置map和useMap即可，这样每条飞线的问题都是由红到蓝的纹理。如何让飞线在不改变顶点的情况下动起来？此时飞线的纹理会怎么展示呢？<br>(<font style="color: orange">注：假设一条完整的渐变线有100个点组成，这里指的不改变顶点意思是这100个点的位置不变，这种情况下飞线动起来，例如每次只显示20个点的范围</font>)    </p>
+<ul>
+<li>飞线动画   </li>
+</ul>
+<p>可以通过设置dashArray、dashRatio属性生成1/3飞线的长度，然后通过设置dashOffest使刚生成的短线偏移，在render的过程中不断修改dataOffest的值，来达到动画的效果。<br>问题：这样产生的飞线，纹理同样只是原纹理的三分之一大小。假设100个点对应红到蓝的完整纹理，那么0到33个点对应的就是纹理的0-1/3的部分，偏移到33-66个点的时候，对应的大概就是1/3-2/3的部分，以此类推。</p>
+<ul>
+<li>性能卡点</li>
+</ul>
+<p>那如果想要飞线在非的过程中始终展示的是完整的纹理，怎么实现呢？这个时候我们只能通过不断调用<font style="color: orange">setPoints</font>方法去改变顶点，将完整的纹理映射到新的顶点范围内，这个就是笔者在开发过程中会遇到卡顿的原因。开发需求是完整的展示飞线的纹理并不断变换位置。我们来看下源码中<font style="color: orange">setPoints</font>的具体内容。<a href="https://github.com/spite/THREE.MeshLine/blob/master/src/THREE.MeshLine.js" target="_blank" rel="noopener">源码地址</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">MeshLine.prototype.setPoints = <span class="function"><span class="keyword">function</span>(<span class="params">points, wcb</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!(points <span class="keyword">instanceof</span> <span class="built_in">Float32Array</span>) &amp;&amp; !(points <span class="keyword">instanceof</span> <span class="built_in">Array</span>)) &#123;</span><br><span class="line">    <span class="built_in">console</span>.error(</span><br><span class="line">      <span class="string">"ERROR: The BufferArray of points is not instancied correctly."</span></span><br><span class="line">    );</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// as the points are mutated we store them</span></span><br><span class="line">  <span class="comment">// for later retreival when necessary (declaritive architectures)</span></span><br><span class="line">  <span class="keyword">this</span>._points = points;</span><br><span class="line">  <span class="keyword">this</span>.widthCallback = wcb;</span><br><span class="line">  <span class="keyword">this</span>.positions = [];</span><br><span class="line">  <span class="keyword">this</span>.counters = [];</span><br><span class="line">  <span class="keyword">if</span> (points.length &amp;&amp; points[<span class="number">0</span>] <span class="keyword">instanceof</span> THREE.Vector3) &#123;</span><br><span class="line">    <span class="comment">// could transform Vector3 array into the array used below</span></span><br><span class="line">    <span class="comment">// but this approach will only loop through the array once</span></span><br><span class="line">    <span class="comment">// and is more performant</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">0</span>; j &lt; points.length; j++) &#123;</span><br><span class="line">      <span class="keyword">var</span> p = points[j];</span><br><span class="line">      <span class="keyword">var</span> c = j / points.length;</span><br><span class="line">      <span class="keyword">this</span>.positions.push(p.x, p.y, p.z);</span><br><span class="line">      <span class="keyword">this</span>.positions.push(p.x, p.y, p.z);</span><br><span class="line">      <span class="keyword">this</span>.counters.push(c);</span><br><span class="line">      <span class="keyword">this</span>.counters.push(c);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">0</span>; j &lt; points.length; j += <span class="number">3</span>) &#123;</span><br><span class="line">      <span class="keyword">var</span> c = j / points.length;</span><br><span class="line">      <span class="keyword">this</span>.positions.push(points[j], points[j + <span class="number">1</span>], points[j + <span class="number">2</span>]);</span><br><span class="line">      <span class="keyword">this</span>.positions.push(points[j], points[j + <span class="number">1</span>], points[j + <span class="number">2</span>]);</span><br><span class="line">      <span class="keyword">this</span>.counters.push(c);</span><br><span class="line">      <span class="keyword">this</span>.counters.push(c);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">this</span>.process();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代码中可以看出，每次调用setPoints方法都会将最近的顶点信息更新到this.positions和this.counters里面，单看这几行代码是不会有很大的性能消耗的，重点就是最后调用的<font style="color: orange">this.process()</font>方法，这个也是我定位卡顿的原因。</p>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1615028984/blog/meshline%E6%80%A7%E8%83%BD/meshline%E6%80%A7%E8%83%BD-2_yeeudb.png" /></center>
+
+<p>可见这个方法对性能的影响是很大的，那我们就来看下process方法中到底都做了写什么事儿<br>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line">MeshLine.prototype.process = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> l = <span class="keyword">this</span>.positions.length / <span class="number">6</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.previous = []</span><br><span class="line">  <span class="keyword">this</span>.next = []</span><br><span class="line">  <span class="keyword">this</span>.side = []</span><br><span class="line">  <span class="keyword">this</span>.width = []</span><br><span class="line">  <span class="keyword">this</span>.indices_array = []</span><br><span class="line">  <span class="keyword">this</span>.uvs = []</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> w</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> v</span><br><span class="line">  <span class="comment">// initial previous points</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>.compareV3(<span class="number">0</span>, l - <span class="number">1</span>)) &#123;</span><br><span class="line">    v = <span class="keyword">this</span>.copyV3(l - <span class="number">2</span>)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    v = <span class="keyword">this</span>.copyV3(<span class="number">0</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">this</span>.previous.push(v[<span class="number">0</span>], v[<span class="number">1</span>], v[<span class="number">2</span>])</span><br><span class="line">  <span class="keyword">this</span>.previous.push(v[<span class="number">0</span>], v[<span class="number">1</span>], v[<span class="number">2</span>])</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">var</span> j = <span class="number">0</span>; j &lt; l; j++) &#123;</span><br><span class="line">    <span class="comment">// sides</span></span><br><span class="line">    <span class="keyword">this</span>.side.push(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">this</span>.side.push(<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// widths</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.widthCallback) w = <span class="keyword">this</span>.widthCallback(j / (l - <span class="number">1</span>))</span><br><span class="line">    <span class="keyword">else</span> w = <span class="number">1</span></span><br><span class="line">    <span class="keyword">this</span>.width.push(w)</span><br><span class="line">    <span class="keyword">this</span>.width.push(w)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// uvs</span></span><br><span class="line">    <span class="keyword">this</span>.uvs.push(j / (l - <span class="number">1</span>), <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">this</span>.uvs.push(j / (l - <span class="number">1</span>), <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (j &lt; l - <span class="number">1</span>) &#123;</span><br><span class="line">      <span class="comment">// points previous to poisitions</span></span><br><span class="line">      v = <span class="keyword">this</span>.copyV3(j)</span><br><span class="line">      <span class="keyword">this</span>.previous.push(v[<span class="number">0</span>], v[<span class="number">1</span>], v[<span class="number">2</span>])</span><br><span class="line">      <span class="keyword">this</span>.previous.push(v[<span class="number">0</span>], v[<span class="number">1</span>], v[<span class="number">2</span>])</span><br><span class="line"></span><br><span class="line">      <span class="comment">// indices</span></span><br><span class="line">      <span class="keyword">var</span> n = j * <span class="number">2</span></span><br><span class="line">      <span class="keyword">this</span>.indices_array.push(n, n + <span class="number">1</span>, n + <span class="number">2</span>)</span><br><span class="line">      <span class="keyword">this</span>.indices_array.push(n + <span class="number">2</span>, n + <span class="number">1</span>, n + <span class="number">3</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (j &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="comment">// points after poisitions</span></span><br><span class="line">      v = <span class="keyword">this</span>.copyV3(j)</span><br><span class="line">      <span class="keyword">this</span>.next.push(v[<span class="number">0</span>], v[<span class="number">1</span>], v[<span class="number">2</span>])</span><br><span class="line">      <span class="keyword">this</span>.next.push(v[<span class="number">0</span>], v[<span class="number">1</span>], v[<span class="number">2</span>])</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// last next point</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>.compareV3(l - <span class="number">1</span>, <span class="number">0</span>)) &#123;</span><br><span class="line">    v = <span class="keyword">this</span>.copyV3(<span class="number">1</span>)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    v = <span class="keyword">this</span>.copyV3(l - <span class="number">1</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">this</span>.next.push(v[<span class="number">0</span>], v[<span class="number">1</span>], v[<span class="number">2</span>])</span><br><span class="line">  <span class="keyword">this</span>.next.push(v[<span class="number">0</span>], v[<span class="number">1</span>], v[<span class="number">2</span>])</span><br><span class="line"></span><br><span class="line">  <span class="comment">// redefining the attribute seems to prevent range errors</span></span><br><span class="line">  <span class="comment">// if the user sets a differing number of vertices</span></span><br><span class="line">  <span class="keyword">if</span> (!<span class="keyword">this</span>._attributes || <span class="keyword">this</span>._attributes.position.count !== <span class="keyword">this</span>.positions.length) &#123;</span><br><span class="line">    <span class="keyword">this</span>._attributes = &#123;</span><br><span class="line">      position: <span class="keyword">new</span> THREE.BufferAttribute(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="keyword">this</span>.positions), <span class="number">3</span>),</span><br><span class="line">      previous: <span class="keyword">new</span> THREE.BufferAttribute(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="keyword">this</span>.previous), <span class="number">3</span>),</span><br><span class="line">      next: <span class="keyword">new</span> THREE.BufferAttribute(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="keyword">this</span>.next), <span class="number">3</span>),</span><br><span class="line">      side: <span class="keyword">new</span> THREE.BufferAttribute(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="keyword">this</span>.side), <span class="number">1</span>),</span><br><span class="line">      width: <span class="keyword">new</span> THREE.BufferAttribute(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="keyword">this</span>.width), <span class="number">1</span>),</span><br><span class="line">      uv: <span class="keyword">new</span> THREE.BufferAttribute(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="keyword">this</span>.uvs), <span class="number">2</span>),</span><br><span class="line">      index: <span class="keyword">new</span> THREE.BufferAttribute(<span class="keyword">new</span> <span class="built_in">Uint16Array</span>(<span class="keyword">this</span>.indices_array), <span class="number">1</span>),</span><br><span class="line">      counters: <span class="keyword">new</span> THREE.BufferAttribute(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="keyword">this</span>.counters), <span class="number">1</span>),</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>._attributes.position.copyArray(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="keyword">this</span>.positions))</span><br><span class="line">    <span class="keyword">this</span>._attributes.position.needsUpdate = <span class="literal">true</span></span><br><span class="line">    <span class="keyword">this</span>._attributes.previous.copyArray(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="keyword">this</span>.previous))</span><br><span class="line">    <span class="keyword">this</span>._attributes.previous.needsUpdate = <span class="literal">true</span></span><br><span class="line">    <span class="keyword">this</span>._attributes.next.copyArray(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="keyword">this</span>.next))</span><br><span class="line">    <span class="keyword">this</span>._attributes.next.needsUpdate = <span class="literal">true</span></span><br><span class="line">    <span class="keyword">this</span>._attributes.side.copyArray(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="keyword">this</span>.side))</span><br><span class="line">    <span class="keyword">this</span>._attributes.side.needsUpdate = <span class="literal">true</span></span><br><span class="line">    <span class="keyword">this</span>._attributes.width.copyArray(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="keyword">this</span>.width))</span><br><span class="line">    <span class="keyword">this</span>._attributes.width.needsUpdate = <span class="literal">true</span></span><br><span class="line">    <span class="keyword">this</span>._attributes.uv.copyArray(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="keyword">this</span>.uvs))</span><br><span class="line">    <span class="keyword">this</span>._attributes.uv.needsUpdate = <span class="literal">true</span></span><br><span class="line">    <span class="keyword">this</span>._attributes.index.copyArray(<span class="keyword">new</span> <span class="built_in">Uint16Array</span>(<span class="keyword">this</span>.indices_array))</span><br><span class="line">    <span class="keyword">this</span>._attributes.index.needsUpdate = <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.setAttribute(<span class="string">'position'</span>, <span class="keyword">this</span>._attributes.position)</span><br><span class="line">  <span class="keyword">this</span>.setAttribute(<span class="string">'previous'</span>, <span class="keyword">this</span>._attributes.previous)</span><br><span class="line">  <span class="keyword">this</span>.setAttribute(<span class="string">'next'</span>, <span class="keyword">this</span>._attributes.next)</span><br><span class="line">  <span class="keyword">this</span>.setAttribute(<span class="string">'side'</span>, <span class="keyword">this</span>._attributes.side)</span><br><span class="line">  <span class="keyword">this</span>.setAttribute(<span class="string">'width'</span>, <span class="keyword">this</span>._attributes.width)</span><br><span class="line">  <span class="keyword">this</span>.setAttribute(<span class="string">'uv'</span>, <span class="keyword">this</span>._attributes.uv)</span><br><span class="line">  <span class="keyword">this</span>.setAttribute(<span class="string">'counters'</span>, <span class="keyword">this</span>._attributes.counters)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.setIndex(<span class="keyword">this</span>._attributes.index)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.computeBoundingSphere()</span><br><span class="line">  <span class="keyword">this</span>.computeBoundingBox()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看出process方法的功能是根据新顶点生成对应的新的<font style="color: orange">position、previous、next、side、width、uv、counters</font>这几个BufferAttribute，然后传到顶点着色器中重新渲染。(注：为什么要生成这些，我们下一节中会讲解)</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>._attributes = &#123;</span><br><span class="line">  position: <span class="keyword">new</span> THREE.BufferAttribute(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="keyword">this</span>.positions), <span class="number">3</span>),</span><br><span class="line">  previous: <span class="keyword">new</span> THREE.BufferAttribute(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="keyword">this</span>.previous), <span class="number">3</span>),</span><br><span class="line">  next: <span class="keyword">new</span> THREE.BufferAttribute(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="keyword">this</span>.next), <span class="number">3</span>),</span><br><span class="line">  side: <span class="keyword">new</span> THREE.BufferAttribute(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="keyword">this</span>.side), <span class="number">1</span>),</span><br><span class="line">  width: <span class="keyword">new</span> THREE.BufferAttribute(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="keyword">this</span>.width), <span class="number">1</span>),</span><br><span class="line">  uv: <span class="keyword">new</span> THREE.BufferAttribute(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="keyword">this</span>.uvs), <span class="number">2</span>),</span><br><span class="line">  index: <span class="keyword">new</span> THREE.BufferAttribute(<span class="keyword">new</span> <span class="built_in">Uint16Array</span>(<span class="keyword">this</span>.indices_array), <span class="number">1</span>),</span><br><span class="line">  counters: <span class="keyword">new</span> THREE.BufferAttribute(<span class="keyword">new</span> <span class="built_in">Float32Array</span>(<span class="keyword">this</span>.counters), <span class="number">1</span>),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>问题就在与每次都是新建而不是替换，所以造成了性能问题。最后为了解决项目中遇到的性能问题，笔者决定自己实现飞线的渲染，即使用自定义材料，重写顶点和片元着色器。</p>
+<h2 id="3-自定义shader"><a href="#3-自定义shader" class="headerlink" title="3. 自定义shader"></a>3. 自定义shader</h2><h3 id="3-1-如何在webgl中画一根2px的线"><a href="#3-1-如何在webgl中画一根2px的线" class="headerlink" title="3.1 如何在webgl中画一根2px的线"></a>3.1 如何在webgl中画一根2px的线</h3><ul>
+<li>模拟线条</li>
+</ul>
+<p>以一条线段为例，描述一条线段只需要2个端点，如果用面来描述，则需要4个点；绘制2条线，需要6个点。因此，如果想用面去表示一条n个端点的线，就需要2n个点去描述。</p>
+<ul>
+<li>确定面上点的位置</li>
+</ul>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1615029756/blog/meshline%E6%80%A7%E8%83%BD/meshline%E6%80%A7%E8%83%BD-3_rlpkbt.png" /></center>
+
+<p>以上图为例，取每个线段端点的法线方向为a1方向，取法线负方向为a2方向，分别乘宽度的一般，就可以得到a1和a2的位置，b点同理。</p>
+<ul>
+<li>a和b点的法线方向</li>
+</ul>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1615029892/blog/meshline%E6%80%A7%E8%83%BD/meshline%E6%80%A7%E8%83%BD-4_tc6a4v.png" /></center>
+
+<p>以上图为例，用last、current、next三点，酸楚current点点切线方向，切线方向乘以复数i，即逆时针旋转90度，为法线方向；乘以复数-i，即顺时针旋转90度为负法线方向，则有了Normal和-Normal。</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">vec2</span> dir1 = <span class="built_in">normalize</span>(currentV2 - lastV2)</span><br><span class="line"><span class="type">vec2</span> dir2 = <span class="built_in">normalize</span>(nextV2- currentV2);</span><br><span class="line"><span class="type">vec2</span> dir = <span class="built_in">normalize</span>(dir1 + dir2);</span><br><span class="line"><span class="type">vec2</span> normal = <span class="type">vec2</span>(-dir.y, dir.x)</span><br></pre></td></tr></table></figure>
+
+<p>现在有了面线，但是这是一个二维方法，转换个角度可能就变成一根线了。</p>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1615030433/blog/meshline%E6%80%A7%E8%83%BD/v2-16a07e683bb024c5ddaeb1a2684e27c4_b_v4moiq.gif" /></center>
+
+<p>我们想要的是无论相机怎么旋转，线都是一样粗的，就好像一个三维的面一样。怎么实现呢？我们通过在着色器里对乘完投影矩阵后的二维坐标进行线的“拉宽”计算。</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">mat4</span> pvm = projectionMatrix *modelViewMatrix;</span><br><span class="line"></span><br><span class="line"><span class="type">vec4</span> currentV4 = pvm * <span class="type">vec4</span>(position,<span class="number">1.0</span>);</span><br><span class="line"><span class="type">vec4</span> prevV4 = pvm * <span class="type">vec4</span>(prevPositions,<span class="number">1.0</span>);</span><br><span class="line"><span class="type">vec4</span> nextV4 = pvm * <span class="type">vec4</span>(nextPositions,<span class="number">1.0</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">vec2</span> currentV2 = currentV4.xy /currentV4.w;</span><br><span class="line">currentV2.x *= aspect;</span><br><span class="line"></span><br><span class="line"><span class="type">vec2</span> prevV2 = prevV4.xy / prevV4.w;</span><br><span class="line">prevV2.x *= aspect;</span><br><span class="line"></span><br><span class="line"><span class="type">vec2</span> nextV2 = nextV4.xy / nextV4.w;</span><br><span class="line">nextV2.x *= aspect;</span><br></pre></td></tr></table></figure>
+
+<p>这样就可以得到一个任意旋转看都是有一定宽度的“面线”了。</p>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1615030692/blog/meshline%E6%80%A7%E8%83%BD/meshline%E6%80%A7%E8%83%BD-5_bcj9wx.gif" /></center>
+
+<h3 id="3-2-通过uv改变纹理"><a href="#3-2-通过uv改变纹理" class="headerlink" title="3.2 通过uv改变纹理"></a>3.2 通过uv改变纹理</h3><p>通过3.1节的介绍，我们可以自己通过shader实现有一定宽度的线了，但是当我们改变顶点的时候，仍然需要更新position、previous、next、side、width、uv这些值，只不过我们现在可以控制每次不新建，而是去更新。那还能不能进一步减少计算，进行优化呢？</p>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1615031163/blog/meshline%E6%80%A7%E8%83%BD/meshline%E6%80%A7%E8%83%BD-6_i7yso8.png" /></center>
+
+<p>假设飞线的轨迹是固定的，即轨迹就是上述完整纹理所代表的100个点，那么我们最终想要的结果是飞线在飞的过程中，0-33、33-66、66-100展示的都是完整的纹理，此时我们是不是只需要更改顶点对应的纹理坐标就可以了呢？</p>
+<p>以0-33个点代表的第一小段飞线为例，此时我们在片元着色器中将原始uv值大于0.33的点discard，然后重新计算0-33个点对应的纹理坐标，以1为单位等分，然后传给片元着色器，去取texture对应的像素值即可。</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">uniform</span> <span class="type">sampler2D</span> map;</span><br><span class="line"><span class="keyword">uniform</span> <span class="type">float</span> u_step;</span><br><span class="line"><span class="keyword">uniform</span> <span class="type">float</span> u_length;</span><br><span class="line"><span class="keyword">uniform</span> <span class="type">float</span> u_offset;</span><br><span class="line"><span class="keyword">varying</span> <span class="type">vec3</span> v_UV;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main () &#123;</span><br><span class="line">  <span class="type">vec2</span> u_UV;</span><br><span class="line">  <span class="type">float</span> real_length;</span><br><span class="line">  <span class="type">float</span> start;</span><br><span class="line">  <span class="type">float</span> end;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// start和end即代表飞线的范围</span></span><br><span class="line">  start = <span class="built_in">mod</span>(u_step + u_offset, <span class="number">1.0</span>);</span><br><span class="line">  <span class="keyword">if</span>(start &gt;= <span class="number">1.0</span>) start = <span class="number">1.0</span>;</span><br><span class="line">  end = u_length + start;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 不在start和end范围内的点discard</span></span><br><span class="line">  <span class="keyword">if</span>(v_UV.x &gt; end) <span class="keyword">discard</span>;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span>(v_UV.x &lt; start) <span class="keyword">discard</span>;</span><br><span class="line">  <span class="comment">// 重新计算纹理坐标</span></span><br><span class="line">  <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(end &gt; <span class="number">1.0</span>) real_length = <span class="number">1.0</span> - start;</span><br><span class="line">    u_UV = <span class="type">vec2</span>((v_UV.x - start) / real_length, v_UV.y);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">gl_FragColor</span> = <span class="built_in">texture2D</span>(map, u_UV);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-拓展功能"><a href="#3-3-拓展功能" class="headerlink" title="3.3 拓展功能"></a>3.3 拓展功能</h3><p>现在我们已经尽可能优化了飞线的实现方法，但在实际开发过程中，往往由于整体的美观性会有其他需求，例如：</p>
+<ul>
+<li>不同飞线从不同位置开始飞；</li>
+<li>不同飞线对应不同的纹理；</li>
+<li>飞线的范围是从0-1，长度假设为0.2，那么要求飞线从0开始的时候不能突然冒出0.2的长度，要从0-0.2缓慢变长，且保证纹理的完整性等；</li>
+<li>当飞线的尾端，即start + length大于整条线的终点1时临界条件该怎么处理等。</li>
+</ul>
+<p>其实这些问题笔者在本次开发过程中全部都遇到了，也实现了全部的功能，在这里简单介绍一下，思路还是从片元着色器入手。</p>
+<ul>
+<li>不同飞线从不同位置开始飞</li>
+</ul>
+<p>为例性能优化，假设有5条飞线，每条飞线100个点，笔者是将这500个点放在一个geometry中，并没有每条线新建一个geometry，那么如果区分哪个点在哪条线上，是一个问题，在开发过程中我将二维uv坐标变成了三维，z字段就用来记录在第几条飞线，x、y字段对应正常的uv坐标。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">lines.forEach(<span class="function">(<span class="params">line, idx</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> points = line.points;</span><br><span class="line">  <span class="keyword">const</span> len = points.length;</span><br><span class="line">  points.forEach(<span class="function">(<span class="params">point, index</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.current.push(......);</span><br><span class="line">    <span class="keyword">this</span>.pre.push(......);</span><br><span class="line">    <span class="keyword">this</span>.next.push(......);</span><br><span class="line">    <span class="keyword">this</span>.side.push(......);</span><br><span class="line">    <span class="keyword">this</span>.index.push(......);</span><br><span class="line">    <span class="keyword">this</span>.uvs.push(index / (len - <span class="number">1</span>), <span class="number">0</span>, idx);</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>将uv坐标通过顶点着色器传给片元着色器后，进行处理：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将uv的z字段作为偏移的附加量，这样每条飞线对应的起点就不同</span></span><br><span class="line"><span class="type">float</span> start = <span class="built_in">mod</span>(u_step + v_UV.z * u_offset, <span class="number">1.0</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>不同飞线对应不同的纹理</li>
+</ul>
+<p>同样利用uv坐标的z字段：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">uniform</span> <span class="type">sampler2D</span> map1;</span><br><span class="line"><span class="keyword">uniform</span> <span class="type">sampler2D</span> map2;</span><br><span class="line"><span class="keyword">uniform</span> <span class="type">sampler2D</span> map3;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main () &#123;</span><br><span class="line">  .....</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 纹理随机</span></span><br><span class="line">  <span class="type">float</span> textureIndex = <span class="built_in">mod</span>(v_UV.z, <span class="number">3.0</span>);</span><br><span class="line">  <span class="keyword">if</span>(textureIndex - <span class="number">0.0</span> &lt; <span class="number">0.01</span>) <span class="built_in">gl_FragColor</span> = <span class="built_in">texture2D</span>(map1, u_UV);</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span>(textureIndex - <span class="number">1.0</span> &lt; <span class="number">0.01</span>) <span class="built_in">gl_FragColor</span> = <span class="built_in">texture2D</span>(map2, u_UV);</span><br><span class="line">  <span class="keyword">else</span> <span class="built_in">gl_FragColor</span> = <span class="built_in">texture2D</span>(map3, u_UV);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>start和end的临界判断</li>
+</ul>
+<p>这部分针对不同的场景，要求可能会有很大的区别，不过实现的原理依旧是在片元着色器中对start和end的值进行处理，超出部分的像素点discard或者其他操作，这里就不详细介绍了。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://github.com/spite/THREE.MeshLine" target="_blank" rel="noopener">THREE.MeshLine</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/35837423" target="_blank" rel="noopener">如何在webgl中画一根2px的线­</a></p>
+ 
+      <!-- reward -->
+      <!-- 
+      <div id="reward-btn">
+        Belohnung
+      </div>
+       -->
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <!-- <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright-Hinweis： </strong>
+          Sofern nicht anders angegeben, liegt das Urheberrecht aller Artikel in diesem Blog beim Autor. Nachdruck bitte Quelle angeben!
+        </li>
+      </ul> -->
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2021/03/05/meshLine%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/study/" rel="tag">study</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2021/03/04/css%E5%AE%9E%E7%8E%B0%E8%BD%AE%E6%92%AD%E6%95%88%E6%9E%9C/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">css实现轮播效果</div>
+      </a>
+    
+  </nav>
+
+    
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2021
+        <i class="ri-heart-fill heart_icon"></i> John Doe
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Cherry Blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="http://shenyu-vip.lofter.com" target="_blank" rel="noopener">摄影</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/introduction">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>
