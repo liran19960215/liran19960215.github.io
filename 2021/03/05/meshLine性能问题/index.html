@@ -142,13 +142,13 @@
 <ul>
 <li>确定面上点的位置</li>
 </ul>
-<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1615029756/blog/meshline%E6%80%A7%E8%83%BD/meshline%E6%80%A7%E8%83%BD-3_rlpkbt.png" /></center>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1615029756/blog/meshline%E6%80%A7%E8%83%BD/meshline%E6%80%A7%E8%83%BD-3_rlpkbt.png" style="height: 150px;" /></center>
 
 <p>以上图为例，取每个线段端点的法线方向为a1方向，取法线负方向为a2方向，分别乘宽度的一般，就可以得到a1和a2的位置，b点同理。</p>
 <ul>
 <li>a和b点的法线方向</li>
 </ul>
-<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1615029892/blog/meshline%E6%80%A7%E8%83%BD/meshline%E6%80%A7%E8%83%BD-4_tc6a4v.png" /></center>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1615029892/blog/meshline%E6%80%A7%E8%83%BD/meshline%E6%80%A7%E8%83%BD-4_tc6a4v.png" style="height: 150px;" /></center>
 
 <p>以上图为例，用last、current、next三点，酸楚current点点切线方向，切线方向乘以复数i，即逆时针旋转90度，为法线方向；乘以复数-i，即顺时针旋转90度为负法线方向，则有了Normal和-Normal。</p>
 <figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">vec2</span> dir1 = <span class="built_in">normalize</span>(currentV2 - lastV2)</span><br><span class="line"><span class="type">vec2</span> dir2 = <span class="built_in">normalize</span>(nextV2- currentV2);</span><br><span class="line"><span class="type">vec2</span> dir = <span class="built_in">normalize</span>(dir1 + dir2);</span><br><span class="line"><span class="type">vec2</span> normal = <span class="type">vec2</span>(-dir.y, dir.x)</span><br></pre></td></tr></table></figure>
@@ -276,6 +276,15 @@
 
    
   <nav class="article-nav">
+    
+      <a href="/2021/03/06/circleGeometry%E7%94%BB%E5%9C%86%E5%BC%A7%E7%BC%BA%E5%8F%A3%E9%97%AE%E9%A2%98/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            THREE CircleGeometry画圆弧缺口问题
+          
+        </div>
+      </a>
     
     
       <a href="/2021/03/04/css%E5%AE%9E%E7%8E%B0%E8%BD%AE%E6%92%AD%E6%95%88%E6%9E%9C/" class="article-nav-link">

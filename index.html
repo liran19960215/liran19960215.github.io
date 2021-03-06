@@ -101,6 +101,77 @@
     
     
     <article
+  id="post-circleGeometry画圆弧缺口问题"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2021/03/06/circleGeometry%E7%94%BB%E5%9C%86%E5%BC%A7%E7%BC%BA%E5%8F%A3%E9%97%AE%E9%A2%98/"
+    >THREE CircleGeometry画圆弧缺口问题</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/03/06/circleGeometry%E7%94%BB%E5%9C%86%E5%BC%A7%E7%BC%BA%E5%8F%A3%E9%97%AE%E9%A2%98/" class="article-date">
+  <time datetime="2021-03-06T12:19:40.000Z" itemprop="datePublished">2021-03-06</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/three/">three</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="1-写在前面"><a href="#1-写在前面" class="headerlink" title="1. 写在前面"></a>1. 写在前面</h2><p>为什么要写CircleGeometry呢？CircleGeometry本身和其他的geometry没有大的区别，但是在开发过程中笔者遇到了一个事后想起来有点搞笑的坑。一般用CircleGeometry都是用来画圆，这种使用下不会有啥问题，但是有个需求是画圆弧，所以我就用CircleGeometry和lineMaterial实现，发现圆弧始终会有一个缺口。一开始认为是segments的值影响的，后来发现segments只影响缺口的大小，但是缺口始终存在。后面发现是CircleGeometry顶点的原因，在这里记录一下。</p>
+<h2 id="2-圆弧缺口"><a href="#2-圆弧缺口" class="headerlink" title="2. 圆弧缺口"></a>2. 圆弧缺口</h2><center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1615034044/blog/circleGeometry/circleGeometry_l8jltn.gif" /></center>
+
+<p>segments: 分段。代表圆中三角形片元的个数，不难看出，该值越大，圆弧越顺滑。该值越大，三角形底边的长度越小，这也就是为什么segments越大，画圆弧缺口越小的原因。</p>
+<h3 id="2-1-CircleGeometry顶点的存储"><a href="#2-1-CircleGeometry顶点的存储" class="headerlink" title="2.1 CircleGeometry顶点的存储"></a>2.1 CircleGeometry顶点的存储</h3><center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1615034756/blog/circleGeometry/circleGeometry-2_jveq5d.png" style="width: 200px;" /></center>
+
+<p>如上图所示，假设segments的值为4，即圆由4个三角形片元组成，那么circleGeometry的vertices中共有几个顶点呢？答案是5个顶点，且第一个顶点是圆心，然后是三角形片元的底边顶点一次存储。所以图中的圆对应的vertices就是[0, 1, 2, 3, 4]的坐标。</p>
+<h3 id="2-2-绘制圆弧"><a href="#2-2-绘制圆弧" class="headerlink" title="2.2 绘制圆弧"></a>2.2 绘制圆弧</h3><center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1615035411/blog/circleGeometry/circleGeometry-3_a1lqtc.png" style="width: 200px;" /></center>
+
+<p>以CircleGeometry中的vertices数组结合lineMaterial绘制圆弧的画，不难理解，绘制的应该是1 –&gt; 2 –&gt; 3 –&gt; 4的圆弧，由此可以发现会产生<font style="color: orange">4 –&gt; 1</font>的圆弧缺口，这也是开发过程中产生缺口的原因。</p>
+<h3 id="2-3-填充缺口"><a href="#2-3-填充缺口" class="headerlink" title="2.3 填充缺口"></a>2.3 填充缺口</h3><p>既然我们找到了缺口的原因，就是对于line来说缺少了末尾点1的坐标，因为只画到4结束，那我们对CircleGeometry中的vertices数组push进去第一个三角形片元第一个底边点的坐标即可，对应的是vertices[1]。</p>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1615035847/blog/circleGeometry/circleGeometry-5_ppi3jl.png" style="width: 200px;" /></center>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> geometry = <span class="keyword">new</span> THREE.CircleGeometry(radius, segement)</span><br><span class="line">geometry.vertices.push(geometry.vertices[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">// 不要忘记开启needUpdata属性，不然vertices无法更新</span></span><br><span class="line">geometry.verticesNeedUpdate = <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>可能会有人会问为什么push的不是vertices[0]呢？因为vertices[0]存储的是圆心坐标呀，如果push进去圆心的画，会发生如下结果：</p>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1615035777/blog/circleGeometry/circleGeometry-4_bulxwx.png" style="width: 200px;" /></center>
+
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://threejs.org/docs/#api/zh/geometries/CircleGeometry" target="_blank" rel="noopener">圆形缓冲几何体（CircleGeometry）</a></p>
+ 
+      <!-- reward -->
+      <!--  -->
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/study/" rel="tag">study</a></li></ul>
+
+    </footer>
+  </div>
+
+     
+   
+</article>
+
+    
+    <article
   id="three-meshLine性能问题"
   class="article article-type-three"
   itemscope
@@ -175,13 +246,13 @@
 <ul>
 <li>确定面上点的位置</li>
 </ul>
-<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1615029756/blog/meshline%E6%80%A7%E8%83%BD/meshline%E6%80%A7%E8%83%BD-3_rlpkbt.png" /></center>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1615029756/blog/meshline%E6%80%A7%E8%83%BD/meshline%E6%80%A7%E8%83%BD-3_rlpkbt.png" style="height: 150px;" /></center>
 
 <p>以上图为例，取每个线段端点的法线方向为a1方向，取法线负方向为a2方向，分别乘宽度的一般，就可以得到a1和a2的位置，b点同理。</p>
 <ul>
 <li>a和b点的法线方向</li>
 </ul>
-<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1615029892/blog/meshline%E6%80%A7%E8%83%BD/meshline%E6%80%A7%E8%83%BD-4_tc6a4v.png" /></center>
+<center><img src="https://res.cloudinary.com/dg7gqrbda/image/upload/v1615029892/blog/meshline%E6%80%A7%E8%83%BD/meshline%E6%80%A7%E8%83%BD-4_tc6a4v.png" style="height: 150px;" /></center>
 
 <p>以上图为例，用last、current、next三点，酸楚current点点切线方向，切线方向乘以复数i，即逆时针旋转90度，为法线方向；乘以复数-i，即顺时针旋转90度为负法线方向，则有了Normal和-Normal。</p>
 <figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">vec2</span> dir1 = <span class="built_in">normalize</span>(currentV2 - lastV2)</span><br><span class="line"><span class="type">vec2</span> dir2 = <span class="built_in">normalize</span>(nextV2- currentV2);</span><br><span class="line"><span class="type">vec2</span> dir = <span class="built_in">normalize</span>(dir1 + dir2);</span><br><span class="line"><span class="type">vec2</span> normal = <span class="type">vec2</span>(-dir.y, dir.x)</span><br></pre></td></tr></table></figure>
@@ -1426,72 +1497,6 @@
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://juejin.im/post/6844903810951806989" target="_blank" rel="noopener">伪类与伪元素的区别</a><br><a href="https://www.html.cn/qa/css3/17445.html" target="_blank" rel="noopener">css伪类的种类有哪些？</a><br><a href="https://juejin.im/post/6844903761891213320" target="_blank" rel="noopener">「前端面试题系列3」伪类与伪元素的区别及实战
 </a><br><a href="https://www.cnblogs.com/guangzhou11/p/7360589.html" target="_blank" rel="noopener">CSS3 ::before和::after伪元素的实际应用</a><br><a href="https://juejin.im/post/6844903969752350727" target="_blank" rel="noopener">伪类与伪元素的区别</a></p>
  
-      <!-- reward -->
-      <!--  -->
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/study/" rel="tag">study</a></li></ul>
-
-    </footer>
-  </div>
-
-     
-   
-</article>
-
-    
-    <article
-  id="blog-vue中iframe的应用"
-  class="article article-type-blog"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2020/10/17/vue%E4%B8%ADiframe%E7%9A%84%E5%BA%94%E7%94%A8/"
-    >vue中iframe的应用</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2020/10/17/vue%E4%B8%ADiframe%E7%9A%84%E5%BA%94%E7%94%A8/" class="article-date">
-  <time datetime="2020-10-17T06:06:59.000Z" itemprop="datePublished">2020-10-17</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/vue/">vue</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <p>最近项目中有个需求，就是将keynote中的ppt转成html，然后用iframe嵌入vue中，并在外部可以出发html上展示的ppt的上一页和下一页功能，这就涉及到vue和iframe之间的通信。记录一下。</p>
-<p>先写一个简单到htmlDemo</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">id</span>=<span class="string">"mainIframe"</span> <span class="attr">ref</span>=<span class="string">"mainIframe"</span> <span class="attr">name</span>=<span class="string">"mainIframe"</span> <span class="attr">:src</span>=<span class="string">"./demo.html"</span> <span class="attr">frameborder</span>=<span class="string">"0"</span> <span class="attr">scrolling</span>=<span class="string">"auto"</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="actionscript">  name: <span class="string">'...'</span>,</span></span><br><span class="line">  props: &#123;&#125;,</span><br><span class="line">  mounted () &#123;&#125;,</span><br><span class="line">  methods: &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">lang</span>=<span class="string">"less"</span> <span class="attr">scoped</span>&gt;</span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h2 id="父传子（vue-–-gt-iframe）"><a href="#父传子（vue-–-gt-iframe）" class="headerlink" title="父传子（vue –&gt; iframe）"></a>父传子（vue –&gt; iframe）</h2><h3 id="1-postMessage"><a href="#1-postMessage" class="headerlink" title="1. postMessage"></a>1. postMessage</h3><p>首先在父组件mounted的时候，要先获取到iframe的内容窗口：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在mounted生命周期中获取iframe的内容窗口</span></span><br><span class="line"><span class="keyword">this</span>.iframeWin = <span class="keyword">this</span>.$refs.mainIframe.contentWindow</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在methods中定义方法，向iframe传值时调用</span></span><br><span class="line">public sendMessage (val) &#123;</span><br><span class="line">  <span class="comment">// 外部vue向iframe内部传数据</span></span><br><span class="line">  <span class="keyword">this</span>.iframeWin.postMessage(&#123;</span><br><span class="line">    cmd: <span class="string">'returnInfo'</span>,</span><br><span class="line">    params: &#123;&#125;</span><br><span class="line">  &#125;, <span class="string">'*'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>iframe包裹的html页面中需要创建一个listener来监听父组件传过来的信息</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mounted 生命周期中定义监听</span></span><br><span class="line">mounted() &#123;</span><br><span class="line">    <span class="built_in">window</span>.addEventListener(<span class="string">"message"</span>, <span class="keyword">this</span>.handleMessageFromParent)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在methods中定义方法</span></span><br><span class="line">handleMessageFromParent (event) &#123;</span><br><span class="line">    <span class="keyword">var</span> data = event.data;</span><br><span class="line">    <span class="keyword">switch</span> (data.cmd) &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="string">'returnInfo'</span>:</span><br><span class="line">        <span class="keyword">this</span>.info = data.params.info</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-<h3 id="2-直接操作iframe"><a href="#2-直接操作iframe" class="headerlink" title="2. 直接操作iframe"></a>2. 直接操作iframe</h3><p>父级页面直接更改iframe里面的值</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">setData(data) &#123;</span><br><span class="line">  <span class="comment">// 获得对应iframe的window对象</span></span><br><span class="line">  <span class="keyword">const</span> obj1 = <span class="built_in">window</span>.frames[<span class="string">'mainIframe'</span>]</span><br><span class="line">  obj1.wpsData = <span class="string">'设置的数据'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 验证 发现wpsData数据已经改变</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getData</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  alert(wpsData) </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>但是如果要在父组件中模拟子组件的点击或者是按键操作，还是要通过postMessage。例如，我在父组件中添加按钮，点击就可以触发iframe里html页面的切换或者其他操作。</p>
-<h2 id="子传父（iframe-–-gt-vue）"><a href="#子传父（iframe-–-gt-vue）" class="headerlink" title="子传父（iframe –&gt; vue）"></a>子传父（iframe –&gt; vue）</h2><p>子组件传值</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// methods中定义方法</span></span><br><span class="line"><span class="built_in">window</span>.parent.postMessage(&#123;</span><br><span class="line">  cmd: <span class="string">'returnInfo'</span>,</span><br><span class="line">  params: &#123;</span><br><span class="line">    info: <span class="string">'0101听到请回答'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;, <span class="string">'*'</span>)</span><br></pre></td></tr></table></figure>
-<p>父组件接收</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mounted 生命周期中定义监听</span></span><br><span class="line">mounted() &#123;</span><br><span class="line">    <span class="built_in">window</span>.addEventListener(<span class="string">"message"</span>, <span class="keyword">this</span>.handleMessage)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 同样在methods中定义一个方法</span></span><br><span class="line">handleMessage (event) &#123;</span><br><span class="line">  <span class="keyword">var</span> data = event.data;</span><br><span class="line">  <span class="keyword">switch</span> (data.cmd) &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="string">'returnInfo'</span>:</span><br><span class="line">        <span class="keyword">this</span>.info = data.info</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>参考博客：<br><a href="https://www.cnblogs.com/clwydjgs/p/11898622.html" target="_blank" rel="noopener">vue项目iframe的传值问题</a><br><a href="https://juejin.im/post/6844904126879367176" target="_blank" rel="noopener">vue中iframe的传值</a><br><a href="https://blog.csdn.net/qq_34335450/article/details/99851356" target="_blank" rel="noopener">postMessage和addEventListener踩坑</a></p>
-<h2 id="未完待续…补充完善postMessage的相关原理"><a href="#未完待续…补充完善postMessage的相关原理" class="headerlink" title="未完待续…补充完善postMessage的相关原理"></a>未完待续…补充完善postMessage的相关原理</h2> 
       <!-- reward -->
       <!--  -->
     </div>
